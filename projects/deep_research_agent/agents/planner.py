@@ -1,7 +1,7 @@
 import agents as agents_sdk
 
 
-def create_planner_agent(query_generator):
+def create_planner_agent(query_generator, hooks=None):
     return agents_sdk.Agent(
         name="Planner",
         model="gpt-4o",
@@ -13,4 +13,6 @@ def create_planner_agent(query_generator):
 Output your plan as a list of specific sub-topics to research.
 Then hand off to the Query Generator to create search queries.""",
         handoffs=[query_generator],
+        hooks=hooks,
+        model_settings=agents_sdk.ModelSettings(timeout=60),
     )

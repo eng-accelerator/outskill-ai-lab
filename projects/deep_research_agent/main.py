@@ -1,3 +1,5 @@
+import asyncio
+
 import agents as agents_sdk
 
 from deep_research_agent.agents import (create_planner_agent,
@@ -8,21 +10,35 @@ from deep_research_agent.agents import (create_planner_agent,
 from deep_research_agent.utils import load_config
 
 
-def main():
+class StatusHooks(agents_sdk.AgentHooks):
+    def on_run_start(self, ctx):
+        print(f"\n🚀 Starting: {ctx.agent.name}")
+    
+    def on_run_end(self, ctx, output):
+        print(f"✅ Completed: {ctx.agent.name}")
+
+
+async def main():
     config = load_config()
     
     if config["openai_api_key"]:
         agents_sdk.set_default_openai_key(config["openai_api_key"])
     
-    writer = create_writer_agent()
-    synthesizer = create_synthesizer_agent(writer)
-    retriever = create_retriever_agent(synthesizer)
-    query_generator = create_query_generator_agent(retriever)
-    planner = create_planner_agent(query_generator)
+    hooks = StatusHooks()
+    
+    writer = create_writer_agent(hooks)
+    synthesizer = create_synthesizer_agent(writer, hooks)
+    retriever = create_retriever_agent(synthesizer, hooks)
+    query_generator = create_query_generator_agent(retriever, hooks)
+    planner = create_planner_agent(query_generator, hooks)
     
     research_query = input("Enter your research topic: ")
     
-    result = agents_sdk.Runner.run_sync(planner, research_query)
+    print("\n" + "="*80)
+    print("STARTING RESEARCH WORKFLOW")
+    print("="*80)
+    
+    result = await agents_sdk.Runner.run(planner, research_query, max_turns=50)
     
     print("\n" + "="*80)
     print("RESEARCH REPORT")
@@ -31,4 +47,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

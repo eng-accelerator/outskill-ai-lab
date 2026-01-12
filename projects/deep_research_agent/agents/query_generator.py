@@ -1,7 +1,7 @@
 import agents as agents_sdk
 
 
-def create_query_generator_agent(retriever):
+def create_query_generator_agent(retriever, hooks=None):
     return agents_sdk.Agent(
         name="QueryGenerator",
         model="gpt-4o",
@@ -13,4 +13,6 @@ def create_query_generator_agent(retriever):
 Create queries that will retrieve comprehensive and relevant information.
 Then hand off to the Retriever to fetch search results.""",
         handoffs=[retriever],
+        hooks=hooks,
+        model_settings=agents_sdk.ModelSettings(timeout=60),
     )

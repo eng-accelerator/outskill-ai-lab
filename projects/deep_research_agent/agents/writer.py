@@ -3,7 +3,7 @@ import agents as agents_sdk
 from ..tools.citation_formatter import create_citation_tool
 
 
-def create_writer_agent():
+def create_writer_agent(hooks=None):
     return agents_sdk.Agent(
         name="Writer",
         model="gpt-4o",
@@ -19,4 +19,6 @@ def create_writer_agent():
 
 Create a well-structured, comprehensive research report.""",
         tools=[create_citation_tool()],
+        hooks=hooks,
+        model_settings=agents_sdk.ModelSettings(timeout=90),
     )
