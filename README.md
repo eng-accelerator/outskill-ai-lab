@@ -1,4 +1,5 @@
 # Outskill AI Lab
+_Developed and maintained by [Ishan Dutta](https://github.com/ishandutta0098)_
 
 ## About
 The Outskill AI Lab was started in 2025 as an effort to build elaborate projects which would span
