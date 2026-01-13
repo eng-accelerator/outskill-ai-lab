@@ -1,8 +1,8 @@
-import agents as agents_sdk
+from agents import Agent, ModelSettings, WebSearchTool
 
 
 def create_retriever_agent(synthesizer, hooks=None):
-    return agents_sdk.Agent(
+    return Agent(
         name="Retriever",
         model="gpt-4o",
         instructions="""You are a research retrieval expert. Your role is to:
@@ -13,8 +13,8 @@ def create_retriever_agent(synthesizer, hooks=None):
 
 Use the web search tool to gather information from credible sources.
 Then hand off all results to the Synthesizer.""",
-        tools=[agents_sdk.WebSearchTool()],
+        tools=[WebSearchTool()],
         handoffs=[synthesizer],
         hooks=hooks,
-        model_settings=agents_sdk.ModelSettings(timeout=120),
+        model_settings=ModelSettings(timeout=120),
     )

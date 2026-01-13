@@ -1,8 +1,8 @@
-import agents as agents_sdk
+from agents import Agent, ModelSettings
 
 
 def create_planner_agent(query_generator, hooks=None):
-    return agents_sdk.Agent(
+    return Agent(
         name="Planner",
         model="gpt-4o",
         instructions="""You are a research planning expert. Your role is to:
@@ -14,5 +14,5 @@ Output your plan as a list of specific sub-topics to research.
 Then hand off to the Query Generator to create search queries.""",
         handoffs=[query_generator],
         hooks=hooks,
-        model_settings=agents_sdk.ModelSettings(timeout=60),
+        model_settings=ModelSettings(timeout=60),
     )

@@ -1,8 +1,8 @@
-import agents as agents_sdk
+from agents import Agent, ModelSettings
 
 
 def create_synthesizer_agent(writer, hooks=None):
-    return agents_sdk.Agent(
+    return Agent(
         name="Synthesizer",
         model="gpt-4o",
         instructions="""You are an information synthesis expert. Your role is to:
@@ -17,5 +17,5 @@ Create a well-organized synthesis of all findings.
 Then hand off to the Writer to create the final report.""",
         handoffs=[writer],
         hooks=hooks,
-        model_settings=agents_sdk.ModelSettings(timeout=90),
+        model_settings=ModelSettings(timeout=90),
     )

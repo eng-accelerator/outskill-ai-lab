@@ -1,10 +1,9 @@
-import agents as agents_sdk
-
-from ..tools.citation_formatter import create_citation_tool
+from agents import Agent, ModelSettings
+from deep_research_agent.tools.citation_formatter import create_citation_tool
 
 
 def create_writer_agent(hooks=None):
-    return agents_sdk.Agent(
+    return Agent(
         name="Writer",
         model="gpt-4o",
         instructions="""You are a research report writer. Your role is to:
@@ -20,5 +19,5 @@ def create_writer_agent(hooks=None):
 Create a well-structured, comprehensive research report.""",
         tools=[create_citation_tool()],
         hooks=hooks,
-        model_settings=agents_sdk.ModelSettings(timeout=90),
+        model_settings=ModelSettings(timeout=90),
     )
