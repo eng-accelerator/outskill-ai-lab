@@ -11,9 +11,7 @@ from datetime import datetime, timezone
 import arxiv
 import httpx
 import wikipediaapi
-
 from agents import RunContextWrapper, function_tool
-
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
@@ -73,11 +71,13 @@ def wikipedia_search(
         page = _WIKI.page(title)
         summary = page.summary[:500] if page.exists() else item.get("snippet", "")
 
-        results.append({
-            "title": title,
-            "url": f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}",
-            "summary": summary,
-        })
+        results.append(
+            {
+                "title": title,
+                "url": f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}",
+                "summary": summary,
+            }
+        )
 
     output = {
         "query": query,
@@ -161,15 +161,17 @@ def arxiv_search(
 
     results = []
     for paper in search.results():
-        results.append({
-            "title": paper.title,
-            "url": paper.entry_id,
-            "pdf_url": paper.pdf_url,
-            "abstract": paper.summary[:500],
-            "authors": [a.name for a in paper.authors[:5]],
-            "published": paper.published.isoformat() if paper.published else "",
-            "categories": paper.categories,
-        })
+        results.append(
+            {
+                "title": paper.title,
+                "url": paper.entry_id,
+                "pdf_url": paper.pdf_url,
+                "abstract": paper.summary[:500],
+                "authors": [a.name for a in paper.authors[:5]],
+                "published": paper.published.isoformat() if paper.published else "",
+                "categories": paper.categories,
+            }
+        )
 
     output = {
         "query": query,
@@ -218,15 +220,19 @@ def semantic_scholar_search(
     results = []
     for paper in data.get("data", []):
         abstract = paper.get("abstract") or ""
-        results.append({
-            "title": paper.get("title", ""),
-            "url": paper.get("url", ""),
-            "abstract": abstract[:500],
-            "year": paper.get("year"),
-            "citation_count": paper.get("citationCount", 0),
-            "authors": [a.get("name", "") for a in (paper.get("authors") or [])[:5]],
-            "paper_id": paper.get("paperId", ""),
-        })
+        results.append(
+            {
+                "title": paper.get("title", ""),
+                "url": paper.get("url", ""),
+                "abstract": abstract[:500],
+                "year": paper.get("year"),
+                "citation_count": paper.get("citationCount", 0),
+                "authors": [
+                    a.get("name", "") for a in (paper.get("authors") or [])[:5]
+                ],
+                "paper_id": paper.get("paperId", ""),
+            }
+        )
 
     output = {
         "query": query,

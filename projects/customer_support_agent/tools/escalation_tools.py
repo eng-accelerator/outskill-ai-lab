@@ -9,7 +9,6 @@ import logging
 from datetime import datetime, timezone
 
 from agents import RunContextWrapper, function_tool
-
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
@@ -69,7 +68,9 @@ def escalate_to_human(
         "assigned_team": assigned_team,
         "reason": reason,
         "status": "queued",
-        "estimated_response_time": _estimate_response_time(priority, scenario.customer.tier),
+        "estimated_response_time": _estimate_response_time(
+            priority, scenario.customer.tier
+        ),
         "message": (
             f"Escalation {escalation_id} created. Case assigned to {assigned_team}. "
             f"A human agent will review this case within the estimated response time."
@@ -169,7 +170,9 @@ def get_agent_availability(ctx: RunContextWrapper[ScenarioData]) -> str:
         "overall_status": "normal",
     }
 
-    logger.info("Agent availability checked: overall=%s", availability["overall_status"])
+    logger.info(
+        "Agent availability checked: overall=%s", availability["overall_status"]
+    )
     return json.dumps(availability, indent=2)
 
 
@@ -197,7 +200,9 @@ def create_escalation_ticket(
         str: JSON string with escalation ticket details.
     """
     scenario = ctx.context
-    logger.info("Creating escalation ticket: team=%s, priority=%s", assigned_team, priority)
+    logger.info(
+        "Creating escalation ticket: team=%s, priority=%s", assigned_team, priority
+    )
 
     ticket_id = f"ESCTKT-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
 

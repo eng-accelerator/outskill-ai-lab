@@ -11,12 +11,10 @@ import re
 from datetime import datetime, timezone
 
 import httpx
-from bs4 import BeautifulSoup
-from youtube_transcript_api import YouTubeTranscriptApi
-
 from agents import RunContextWrapper, function_tool
-
+from bs4 import BeautifulSoup
 from deep_research_agent.models.research import ResearchContext
+from youtube_transcript_api import YouTubeTranscriptApi
 
 logger = logging.getLogger(__name__)
 
@@ -184,9 +182,7 @@ def youtube_get_transcript(
     transcript_data = ytt_api.fetch(video_id)
 
     # Combine all transcript segments
-    full_text = " ".join(
-        snippet.text for snippet in transcript_data.snippets
-    )
+    full_text = " ".join(snippet.text for snippet in transcript_data.snippets)
 
     truncated = len(full_text) > 5000
     content = full_text[:5000] if truncated else full_text
@@ -203,5 +199,7 @@ def youtube_get_transcript(
         "extracted_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info("YouTube transcript extracted: %d chars from video %s", len(content), video_id)
+    logger.info(
+        "YouTube transcript extracted: %d chars from video %s", len(content), video_id
+    )
     return json.dumps(output, indent=2)

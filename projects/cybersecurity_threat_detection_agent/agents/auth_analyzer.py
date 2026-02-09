@@ -5,12 +5,8 @@ credential stuffing, and privilege escalation by analyzing auth logs.
 """
 
 from agents import Agent, ModelSettings
-
 from cybersecurity_threat_detection_agent.tools.auth_tools import (
-    check_privilege_changes,
-    detect_anomalous_logins,
-    query_auth_logs,
-)
+    check_privilege_changes, detect_anomalous_logins, query_auth_logs)
 
 AUTH_ANALYZER_INSTRUCTIONS = """You are an expert Authentication Analyzer Agent. Your role is to investigate identity and access threats.
 

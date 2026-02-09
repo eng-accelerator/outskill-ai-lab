@@ -14,27 +14,22 @@ import logging
 import os
 import sys
 
-from agents import (
-    AgentHooks,
-    AsyncOpenAI,
-    ModelSettings,
-    OpenAIChatCompletionsModel,
-    RunConfig,
-    Runner,
-    set_tracing_disabled,
-)
-
-from aiops_incident_response_agent.agents.incident_reporter import create_incident_reporter_agent
-from aiops_incident_response_agent.agents.log_analyzer import create_log_analyzer_agent
-from aiops_incident_response_agent.agents.metrics_analyzer import create_metrics_analyzer_agent
-from aiops_incident_response_agent.agents.remediation import create_remediation_agent
-from aiops_incident_response_agent.agents.root_cause_analyzer import create_rca_agent
+from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
+                    OpenAIChatCompletionsModel, RunConfig, Runner,
+                    set_tracing_disabled)
+from aiops_incident_response_agent.agents.incident_reporter import \
+    create_incident_reporter_agent
+from aiops_incident_response_agent.agents.log_analyzer import \
+    create_log_analyzer_agent
+from aiops_incident_response_agent.agents.metrics_analyzer import \
+    create_metrics_analyzer_agent
+from aiops_incident_response_agent.agents.remediation import \
+    create_remediation_agent
+from aiops_incident_response_agent.agents.root_cause_analyzer import \
+    create_rca_agent
 from aiops_incident_response_agent.agents.triage import create_triage_agent
 from aiops_incident_response_agent.simulators.scenario_engine import (
-    ScenarioType,
-    generate_scenario,
-    list_scenarios,
-)
+    ScenarioType, generate_scenario, list_scenarios)
 from aiops_incident_response_agent.utils.config import load_config
 
 logging.basicConfig(
@@ -135,7 +130,9 @@ def create_openrouter_model() -> OpenAIChatCompletionsModel:
         openai_client=client,
     )
 
-    logger.info("OpenRouter model configured: base_url=%s, model=%s", base_url, model_name)
+    logger.info(
+        "OpenRouter model configured: base_url=%s, model=%s", base_url, model_name
+    )
     return model
 
 
@@ -163,7 +160,9 @@ def build_agent_pipeline(model: OpenAIChatCompletionsModel, hooks: AgentHooks):
     for agent in [triage, log_analyzer, metrics_analyzer, rca, remediation, reporter]:
         agent.model = model
 
-    logger.info("Agent pipeline built: Triage -> [Log/Metrics Analyzer] -> RCA -> Remediation -> Reporter")
+    logger.info(
+        "Agent pipeline built: Triage -> [Log/Metrics Analyzer] -> RCA -> Remediation -> Reporter"
+    )
     return triage
 
 
@@ -214,8 +213,10 @@ async def run_incident_response(scenario_type: ScenarioType) -> str:
     # Generate scenario data
     print(f"\nGenerating scenario: {scenario_type}...")
     scenario_data = generate_scenario(scenario_type)
-    print(f"Generated: {len(scenario_data.logs)} logs, {len(scenario_data.metrics)} metrics, "
-          f"{len(scenario_data.alerts)} alerts, {len(scenario_data.traces)} traces")
+    print(
+        f"Generated: {len(scenario_data.logs)} logs, {len(scenario_data.metrics)} metrics, "
+        f"{len(scenario_data.alerts)} alerts, {len(scenario_data.traces)} traces"
+    )
 
     # Build agent pipeline
     triage_agent = build_agent_pipeline(model, hooks)

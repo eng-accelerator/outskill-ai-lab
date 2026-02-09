@@ -5,12 +5,8 @@ and correlations across services, then hands off findings to the RCA agent.
 """
 
 from agents import Agent, ModelSettings
-
 from aiops_incident_response_agent.tools.log_tools import (
-    get_log_statistics,
-    query_logs,
-    search_error_patterns,
-)
+    get_log_statistics, query_logs, search_error_patterns)
 
 LOG_ANALYZER_INSTRUCTIONS = """You are an expert Log Analysis Agent specializing in application log investigation.
 

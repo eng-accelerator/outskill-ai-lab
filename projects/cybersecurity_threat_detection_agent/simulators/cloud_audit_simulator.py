@@ -7,7 +7,8 @@ S3 bucket policy changes, security group modifications, and credential anomalies
 import random
 from datetime import datetime, timedelta
 
-from cybersecurity_threat_detection_agent.models.analysis import CloudAuditEntry
+from cybersecurity_threat_detection_agent.models.analysis import \
+    CloudAuditEntry
 
 # Normal cloud principals
 CLOUD_PRINCIPALS = [
@@ -192,7 +193,9 @@ def generate_api_key_compromise_cloud_audit(
             CloudAuditEntry(
                 timestamp=ts.isoformat(),
                 principal="arn:aws:iam::123456789012:role/deploy-role",
-                action=random.choice(["s3:GetObject", "s3:ListBucket", "dynamodb:Scan"]),
+                action=random.choice(
+                    ["s3:GetObject", "s3:ListBucket", "dynamodb:Scan"]
+                ),
                 resource=f"arn:aws:s3:::prod-data/table-{i}",
                 resource_type="s3",
                 region="us-east-1",

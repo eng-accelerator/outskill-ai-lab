@@ -5,12 +5,8 @@ and identify the blast radius of incidents, then hands off to the RCA agent.
 """
 
 from agents import Agent, ModelSettings
-
 from aiops_incident_response_agent.tools.metrics_tools import (
-    detect_anomalies,
-    get_service_dependencies,
-    query_metrics,
-)
+    detect_anomalies, get_service_dependencies, query_metrics)
 
 METRICS_ANALYZER_INSTRUCTIONS = """You are an expert Metrics Analysis Agent specializing in system performance analysis.
 

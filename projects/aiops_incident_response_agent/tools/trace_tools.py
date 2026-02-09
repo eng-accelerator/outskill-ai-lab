@@ -9,8 +9,8 @@ import logging
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
-from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
+from aiops_incident_response_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,9 @@ def query_traces(
     if status:
         traces = [t for t in traces if t.status == status]
 
-    logger.info("Queried %d trace spans (service=%s, status=%s)", len(traces), service, status)
+    logger.info(
+        "Queried %d trace spans (service=%s, status=%s)", len(traces), service, status
+    )
     return json.dumps([asdict(t) for t in traces], indent=2)
 
 
@@ -108,7 +110,9 @@ def correlate_signals(ctx: RunContextWrapper[ScenarioData]) -> str:
             unhealthy_services.add(health.service)
 
     # Find services appearing across multiple signal types
-    all_services = log_error_services | alert_services | trace_error_services | unhealthy_services
+    all_services = (
+        log_error_services | alert_services | trace_error_services | unhealthy_services
+    )
     correlations = []
     for svc in all_services:
         signals = []
@@ -120,37 +124,45 @@ def correlate_signals(ctx: RunContextWrapper[ScenarioData]) -> str:
             signals.append("trace_errors")
         if svc in unhealthy_services:
             signals.append("unhealthy")
-        correlations.append({
-            "service": svc,
-            "signal_types": signals,
-            "signal_count": len(signals),
-        })
+        correlations.append(
+            {
+                "service": svc,
+                "signal_types": signals,
+                "signal_count": len(signals),
+            }
+        )
 
     correlations.sort(key=lambda c: c["signal_count"], reverse=True)
 
     # Timeline of significant events
     events = []
     for alert in scenario.alerts:
-        events.append({
-            "timestamp": alert.timestamp,
-            "type": "alert",
-            "service": alert.service,
-            "severity": alert.severity,
-            "message": alert.message,
-        })
+        events.append(
+            {
+                "timestamp": alert.timestamp,
+                "type": "alert",
+                "service": alert.service,
+                "severity": alert.severity,
+                "message": alert.message,
+            }
+        )
     for deploy in scenario.deployments:
-        events.append({
-            "timestamp": deploy.timestamp,
-            "type": "deployment",
-            "service": deploy.service,
-            "message": f"Deployed {deploy.version}: {deploy.change_summary}",
-        })
+        events.append(
+            {
+                "timestamp": deploy.timestamp,
+                "type": "deployment",
+                "service": deploy.service,
+                "message": f"Deployed {deploy.version}: {deploy.change_summary}",
+            }
+        )
     events.sort(key=lambda e: e["timestamp"])
 
     result = {
         "service_correlations": correlations,
         "event_timeline": events,
-        "most_affected_service": correlations[0]["service"] if correlations else "unknown",
+        "most_affected_service": (
+            correlations[0]["service"] if correlations else "unknown"
+        ),
     }
 
     logger.info("Correlated signals across %d services", len(correlations))

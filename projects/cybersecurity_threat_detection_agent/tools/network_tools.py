@@ -10,8 +10,8 @@ from collections import Counter, defaultdict
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,13 @@ def query_network_logs(
         logs = [entry for entry in logs if entry.action == action]
 
     logs = logs[:limit]
-    logger.info("Queried %d network logs (src=%s, dst=%s, port=%d)", len(logs), source_ip, dest_ip, dest_port)
+    logger.info(
+        "Queried %d network logs (src=%s, dst=%s, port=%d)",
+        len(logs),
+        source_ip,
+        dest_ip,
+        dest_port,
+    )
     return json.dumps([asdict(entry) for entry in logs], indent=2)
 
 
@@ -96,7 +102,9 @@ def query_api_access_logs(
         logs = [entry for entry in logs if entry.status_code == status_code]
 
     logs = logs[:limit]
-    logger.info("Queried %d API access logs (user=%s, endpoint=%s)", len(logs), user, endpoint)
+    logger.info(
+        "Queried %d API access logs (user=%s, endpoint=%s)", len(logs), user, endpoint
+    )
     return json.dumps([asdict(entry) for entry in logs], indent=2)
 
 
@@ -129,29 +137,33 @@ def detect_c2_patterns(ctx: RunContextWrapper[ScenarioData]) -> str:
     for dest_ip, connections in dest_groups.items():
         # Check for known C2 IPs
         if dest_ip in known_c2_ips:
-            findings.append({
-                "type": "known_c2_server",
-                "severity": "critical",
-                "description": f"Connections detected to known C2 server {dest_ip}",
-                "dest_ip": dest_ip,
-                "connection_count": len(connections),
-                "source_ips": list(set(c.source_ip for c in connections)),
-                "ports": list(set(c.dest_port for c in connections)),
-            })
+            findings.append(
+                {
+                    "type": "known_c2_server",
+                    "severity": "critical",
+                    "description": f"Connections detected to known C2 server {dest_ip}",
+                    "dest_ip": dest_ip,
+                    "connection_count": len(connections),
+                    "source_ips": list(set(c.source_ip for c in connections)),
+                    "ports": list(set(c.dest_port for c in connections)),
+                }
+            )
 
         # Check for beaconing pattern (regular intervals)
         if len(connections) >= 5:
             timestamps = sorted(c.timestamp for c in connections)
             # Simple interval check
-            findings.append({
-                "type": "periodic_beaconing",
-                "severity": "high",
-                "description": f"Periodic connections to {dest_ip}: {len(connections)} connections detected",
-                "dest_ip": dest_ip,
-                "connection_count": len(connections),
-                "first_seen": timestamps[0],
-                "last_seen": timestamps[-1],
-            })
+            findings.append(
+                {
+                    "type": "periodic_beaconing",
+                    "severity": "high",
+                    "description": f"Periodic connections to {dest_ip}: {len(connections)} connections detected",
+                    "dest_ip": dest_ip,
+                    "connection_count": len(connections),
+                    "first_seen": timestamps[0],
+                    "last_seen": timestamps[-1],
+                }
+            )
 
     # Check for port scanning
     internal_sources = defaultdict(set)
@@ -166,14 +178,16 @@ def detect_c2_patterns(ctx: RunContextWrapper[ScenarioData]) -> str:
                 unique_ports_per_dest[dest_ip].add(port)
         for dest_ip, ports in unique_ports_per_dest.items():
             if len(ports) >= 4:
-                findings.append({
-                    "type": "port_scanning",
-                    "severity": "high",
-                    "description": f"Port scanning detected: {src_ip} scanned {len(ports)} ports on {dest_ip}",
-                    "source_ip": src_ip,
-                    "target_ip": dest_ip,
-                    "ports_scanned": sorted(ports),
-                })
+                findings.append(
+                    {
+                        "type": "port_scanning",
+                        "severity": "high",
+                        "description": f"Port scanning detected: {src_ip} scanned {len(ports)} ports on {dest_ip}",
+                        "source_ip": src_ip,
+                        "target_ip": dest_ip,
+                        "ports_scanned": sorted(ports),
+                    }
+                )
 
     logger.info("Detected %d C2/network patterns", len(findings))
     return json.dumps(findings, indent=2)

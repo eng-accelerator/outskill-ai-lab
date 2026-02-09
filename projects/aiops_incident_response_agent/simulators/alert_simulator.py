@@ -41,7 +41,9 @@ def _healthy_service(service: str) -> ServiceHealth:
     )
 
 
-def generate_memory_leak_alerts(base_time: datetime) -> tuple[list[Alert], list[ServiceHealth]]:
+def generate_memory_leak_alerts(
+    base_time: datetime,
+) -> tuple[list[Alert], list[ServiceHealth]]:
     """Generate alerts and health summaries for a memory leak scenario.
 
     Args:
@@ -224,7 +226,12 @@ def generate_database_exhaustion_alerts(
         ServiceHealth("payment-service", "degraded", 22.0, 40.0, 10.0, 8000.0, 1),
     ]
     for svc in SERVICES:
-        if svc not in ("database-proxy", "order-service", "user-service", "payment-service"):
+        if svc not in (
+            "database-proxy",
+            "order-service",
+            "user-service",
+            "payment-service",
+        ):
             health.append(_healthy_service(svc))
 
     return alerts, health
@@ -273,7 +280,10 @@ def generate_network_partition_alerts(
             severity="warning",
             message="Order processing degraded: inventory checks failing",
             timestamp=(partition_time + timedelta(minutes=2)).isoformat(),
-            labels={"alertname": "DependencyFailure", "dependency": "inventory-service"},
+            labels={
+                "alertname": "DependencyFailure",
+                "dependency": "inventory-service",
+            },
         ),
     ]
 
@@ -289,7 +299,9 @@ def generate_network_partition_alerts(
     return alerts, health
 
 
-def generate_cpu_spike_alerts(base_time: datetime) -> tuple[list[Alert], list[ServiceHealth]]:
+def generate_cpu_spike_alerts(
+    base_time: datetime,
+) -> tuple[list[Alert], list[ServiceHealth]]:
     """Generate alerts and health summaries for a CPU spike scenario.
 
     Args:

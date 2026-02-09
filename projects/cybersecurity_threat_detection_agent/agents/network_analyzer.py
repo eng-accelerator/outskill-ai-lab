@@ -5,12 +5,8 @@ port scanning, and malware network indicators.
 """
 
 from agents import Agent, ModelSettings
-
 from cybersecurity_threat_detection_agent.tools.network_tools import (
-    detect_c2_patterns,
-    query_api_access_logs,
-    query_network_logs,
-)
+    detect_c2_patterns, query_api_access_logs, query_network_logs)
 
 NETWORK_ANALYZER_INSTRUCTIONS = """You are an expert Network and API Analyzer Agent. Your role is to investigate network traffic and API access threats.
 

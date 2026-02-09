@@ -13,7 +13,11 @@ from cybersecurity_threat_detection_agent.models.analysis import EndpointEvent
 NORMAL_PROCESSES = [
     ("chrome.exe", "explorer.exe", "C:\\Program Files\\Google\\Chrome\\chrome.exe"),
     ("outlook.exe", "explorer.exe", "C:\\Program Files\\Microsoft Office\\outlook.exe"),
-    ("code.exe", "explorer.exe", "C:\\Users\\user\\AppData\\Local\\Programs\\VS Code\\code.exe"),
+    (
+        "code.exe",
+        "explorer.exe",
+        "C:\\Users\\user\\AppData\\Local\\Programs\\VS Code\\code.exe",
+    ),
     ("svchost.exe", "services.exe", "C:\\Windows\\System32\\svchost.exe -k netsvcs"),
     ("nginx", "systemd", "/usr/sbin/nginx -g daemon off;"),
     ("python3", "bash", "/usr/bin/python3 /app/server.py"),

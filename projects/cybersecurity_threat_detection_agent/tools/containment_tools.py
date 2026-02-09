@@ -8,8 +8,8 @@ import json
 import logging
 
 from agents import RunContextWrapper, function_tool
-
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -61,9 +61,13 @@ def propose_ip_block(
     }
 
     if is_internal:
-        result["warnings"].append(f"WARNING: {ip_address} is an internal IP - blocking may disrupt services")
+        result["warnings"].append(
+            f"WARNING: {ip_address} is an internal IP - blocking may disrupt services"
+        )
     if is_critical:
-        result["warnings"].append(f"CRITICAL: {ip_address} is a critical infrastructure IP - requires SOC lead approval")
+        result["warnings"].append(
+            f"CRITICAL: {ip_address} is a critical infrastructure IP - requires SOC lead approval"
+        )
 
     return json.dumps(result, indent=2)
 
@@ -105,7 +109,9 @@ def propose_account_disable(
     }
 
     if is_protected:
-        result["warnings"].append(f"CRITICAL: {username} is a protected/service account - disabling may impact production")
+        result["warnings"].append(
+            f"CRITICAL: {username} is a protected/service account - disabling may impact production"
+        )
 
     return json.dumps(result, indent=2)
 
@@ -146,7 +152,9 @@ def propose_api_key_revoke(
     }
 
     if is_production:
-        result["warnings"].append(f"WARNING: {api_key_id} is a production key - services using this key will be disrupted until replacement is configured")
+        result["warnings"].append(
+            f"WARNING: {api_key_id} is a production key - services using this key will be disrupted until replacement is configured"
+        )
 
     return json.dumps(result, indent=2)
 
@@ -188,6 +196,8 @@ def propose_host_isolation(
     }
 
     if is_server:
-        result["warnings"].append(f"WARNING: {hostname} is a server - isolation will impact services running on this host")
+        result["warnings"].append(
+            f"WARNING: {hostname} is a server - isolation will impact services running on this host"
+        )
 
     return json.dumps(result, indent=2)

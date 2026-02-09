@@ -17,7 +17,9 @@ SubscriptionStatus = Literal["active", "paused", "cancelled", "past_due", "trial
 PaymentStatus = Literal["pending", "completed", "failed", "refunded", "disputed"]
 
 # Payment methods
-PaymentMethod = Literal["credit_card", "debit_card", "paypal", "bank_transfer", "crypto"]
+PaymentMethod = Literal[
+    "credit_card", "debit_card", "paypal", "bank_transfer", "crypto"
+]
 
 # Refund statuses
 RefundStatus = Literal["pending", "approved", "processing", "completed", "rejected"]

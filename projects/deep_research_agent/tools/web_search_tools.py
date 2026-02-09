@@ -10,10 +10,9 @@ import logging
 from datetime import datetime, timezone
 
 from agents import RunContextWrapper, function_tool
+from deep_research_agent.models.research import ResearchContext
 from duckduckgo_search import DDGS
 from tavily import TavilyClient
-
-from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
 
@@ -53,12 +52,14 @@ def tavily_web_search(
 
     results = []
     for r in response.get("results", []):
-        results.append({
-            "title": r.get("title", ""),
-            "url": r.get("url", ""),
-            "content": r.get("content", ""),
-            "score": r.get("score", 0.0),
-        })
+        results.append(
+            {
+                "title": r.get("title", ""),
+                "url": r.get("url", ""),
+                "content": r.get("content", ""),
+                "score": r.get("score", 0.0),
+            }
+        )
 
     output = {
         "query": query,
@@ -98,11 +99,13 @@ def duckduckgo_text_search(
 
     results = []
     for r in raw_results:
-        results.append({
-            "title": r.get("title", ""),
-            "url": r.get("href", ""),
-            "content": r.get("body", ""),
-        })
+        results.append(
+            {
+                "title": r.get("title", ""),
+                "url": r.get("href", ""),
+                "content": r.get("body", ""),
+            }
+        )
 
     output = {
         "query": query,
@@ -111,7 +114,9 @@ def duckduckgo_text_search(
         "searched_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info("DuckDuckGo text search returned %d results for: %s", len(results), query)
+    logger.info(
+        "DuckDuckGo text search returned %d results for: %s", len(results), query
+    )
     return json.dumps(output, indent=2)
 
 
@@ -141,13 +146,15 @@ def duckduckgo_news_search(
 
     results = []
     for r in raw_results:
-        results.append({
-            "title": r.get("title", ""),
-            "url": r.get("url", ""),
-            "content": r.get("body", ""),
-            "date": r.get("date", ""),
-            "source": r.get("source", ""),
-        })
+        results.append(
+            {
+                "title": r.get("title", ""),
+                "url": r.get("url", ""),
+                "content": r.get("body", ""),
+                "date": r.get("date", ""),
+                "source": r.get("source", ""),
+            }
+        )
 
     output = {
         "query": query,
@@ -156,5 +163,7 @@ def duckduckgo_news_search(
         "searched_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info("DuckDuckGo news search returned %d results for: %s", len(results), query)
+    logger.info(
+        "DuckDuckGo news search returned %d results for: %s", len(results), query
+    )
     return json.dumps(output, indent=2)

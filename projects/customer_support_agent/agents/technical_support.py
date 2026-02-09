@@ -5,12 +5,8 @@ including login problems, API failures, product bugs, and system status inquirie
 """
 
 from agents import Agent, ModelSettings
-
 from customer_support_agent.tools.knowledge_tools import (
-    get_system_status,
-    run_diagnostics,
-    search_knowledge_base,
-)
+    get_system_status, run_diagnostics, search_knowledge_base)
 
 TECHNICAL_SUPPORT_INSTRUCTIONS = """You are an expert Technical Support Agent. Your role is to investigate and resolve technical issues for customers.
 

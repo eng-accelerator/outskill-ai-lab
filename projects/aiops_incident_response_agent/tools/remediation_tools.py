@@ -8,8 +8,8 @@ import json
 import logging
 
 from agents import RunContextWrapper, function_tool
-
-from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
+from aiops_incident_response_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -94,10 +94,12 @@ def lookup_runbook(category: str) -> str:
     logger.info("Looking up runbook for category: %s", category)
     runbook = RUNBOOKS.get(category)
     if not runbook:
-        return json.dumps({
-            "error": f"No runbook found for category: {category}",
-            "available_categories": list(RUNBOOKS.keys()),
-        })
+        return json.dumps(
+            {
+                "error": f"No runbook found for category: {category}",
+                "available_categories": list(RUNBOOKS.keys()),
+            }
+        )
     return json.dumps(runbook, indent=2)
 
 
@@ -121,17 +123,27 @@ def propose_scaling_action(
     Returns:
         str: JSON string of the scaling proposal.
     """
-    logger.info("Proposing scale %s: %d -> %d replicas", service, current_replicas, target_replicas)
-    return json.dumps({
-        "action": "scale_up" if target_replicas > current_replicas else "scale_down",
-        "service": service,
-        "current_replicas": current_replicas,
-        "target_replicas": target_replicas,
-        "command": f"kubectl scale deployment/{service} --replicas={target_replicas}",
-        "reason": reason,
-        "risk_level": "low" if target_replicas <= 6 else "medium",
-        "requires_approval": target_replicas > 6,
-    }, indent=2)
+    logger.info(
+        "Proposing scale %s: %d -> %d replicas",
+        service,
+        current_replicas,
+        target_replicas,
+    )
+    return json.dumps(
+        {
+            "action": (
+                "scale_up" if target_replicas > current_replicas else "scale_down"
+            ),
+            "service": service,
+            "current_replicas": current_replicas,
+            "target_replicas": target_replicas,
+            "command": f"kubectl scale deployment/{service} --replicas={target_replicas}",
+            "reason": reason,
+            "risk_level": "low" if target_replicas <= 6 else "medium",
+            "requires_approval": target_replicas > 6,
+        },
+        indent=2,
+    )
 
 
 @function_tool
@@ -154,17 +166,22 @@ def propose_rollback(
     Returns:
         str: JSON string of the rollback proposal.
     """
-    logger.info("Proposing rollback %s: %s -> %s", service, current_version, target_version)
-    return json.dumps({
-        "action": "rollback",
-        "service": service,
-        "current_version": current_version,
-        "target_version": target_version,
-        "command": f"kubectl rollout undo deployment/{service}",
-        "reason": reason,
-        "risk_level": "medium",
-        "requires_approval": True,
-    }, indent=2)
+    logger.info(
+        "Proposing rollback %s: %s -> %s", service, current_version, target_version
+    )
+    return json.dumps(
+        {
+            "action": "rollback",
+            "service": service,
+            "current_version": current_version,
+            "target_version": target_version,
+            "command": f"kubectl rollout undo deployment/{service}",
+            "reason": reason,
+            "risk_level": "medium",
+            "requires_approval": True,
+        },
+        indent=2,
+    )
 
 
 @function_tool
@@ -189,15 +206,24 @@ def propose_config_change(
     Returns:
         str: JSON string of the config change proposal.
     """
-    logger.info("Proposing config change on %s: %s = %s -> %s", service, config_key, current_value, proposed_value)
-    return json.dumps({
-        "action": "config_change",
-        "service": service,
-        "config_key": config_key,
-        "current_value": current_value,
-        "proposed_value": proposed_value,
-        "command": f"kubectl set env deployment/{service} {config_key}={proposed_value}",
-        "reason": reason,
-        "risk_level": "medium",
-        "requires_approval": True,
-    }, indent=2)
+    logger.info(
+        "Proposing config change on %s: %s = %s -> %s",
+        service,
+        config_key,
+        current_value,
+        proposed_value,
+    )
+    return json.dumps(
+        {
+            "action": "config_change",
+            "service": service,
+            "config_key": config_key,
+            "current_value": current_value,
+            "proposed_value": proposed_value,
+            "command": f"kubectl set env deployment/{service} {config_key}={proposed_value}",
+            "reason": reason,
+            "risk_level": "medium",
+            "requires_approval": True,
+        },
+        indent=2,
+    )

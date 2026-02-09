@@ -6,9 +6,10 @@ before the agent pipeline processes it.
 
 import logging
 
-from agents import Agent, GuardrailFunctionOutput, InputGuardrail, RunContextWrapper
-
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
+from agents import (Agent, GuardrailFunctionOutput, InputGuardrail,
+                    RunContextWrapper)
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,9 @@ async def validate_security_input(
 
     logger.info(
         "Input validation passed: alerts=%d, auth_logs=%d, network_logs=%d",
-        len(scenario.alerts), len(scenario.auth_logs), len(scenario.network_logs),
+        len(scenario.alerts),
+        len(scenario.auth_logs),
+        len(scenario.network_logs),
     )
     return GuardrailFunctionOutput(
         output_info="Security event data validated successfully.",

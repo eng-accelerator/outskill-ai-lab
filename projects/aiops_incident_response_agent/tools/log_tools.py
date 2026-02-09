@@ -10,8 +10,8 @@ from collections import Counter
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
-from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
+from aiops_incident_response_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -78,14 +78,16 @@ def search_error_patterns(ctx: RunContextWrapper[ScenarioData]) -> str:
     for pattern, entries in pattern_groups.items():
         services = list(set(e.service for e in entries))
         timestamps = [e.timestamp for e in entries]
-        patterns.append({
-            "pattern": pattern,
-            "count": len(entries),
-            "first_seen": min(timestamps),
-            "last_seen": max(timestamps),
-            "services": services,
-            "sample_message": entries[0].message,
-        })
+        patterns.append(
+            {
+                "pattern": pattern,
+                "count": len(entries),
+                "first_seen": min(timestamps),
+                "last_seen": max(timestamps),
+                "services": services,
+                "sample_message": entries[0].message,
+            }
+        )
 
     patterns.sort(key=lambda p: p["count"], reverse=True)
     logger.info("Found %d error patterns", len(patterns))
@@ -119,7 +121,8 @@ def get_log_statistics(ctx: RunContextWrapper[ScenarioData]) -> str:
             "total": sum(counts.values()),
             "by_level": dict(counts),
             "error_ratio": round(
-                (counts.get("ERROR", 0) + counts.get("FATAL", 0)) / max(sum(counts.values()), 1),
+                (counts.get("ERROR", 0) + counts.get("FATAL", 0))
+                / max(sum(counts.values()), 1),
                 3,
             ),
         }

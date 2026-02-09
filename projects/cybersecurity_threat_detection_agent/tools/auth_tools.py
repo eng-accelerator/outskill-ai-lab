@@ -10,8 +10,8 @@ from collections import Counter
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,13 @@ def query_auth_logs(
         logs = [entry for entry in logs if entry.action == action]
 
     logs = logs[:limit]
-    logger.info("Queried %d auth logs (user=%s, source_ip=%s, action=%s)", len(logs), user, source_ip, action)
+    logger.info(
+        "Queried %d auth logs (user=%s, source_ip=%s, action=%s)",
+        len(logs),
+        user,
+        source_ip,
+        action,
+    )
     return json.dumps([asdict(entry) for entry in logs], indent=2)
 
 
@@ -72,7 +78,13 @@ def detect_anomalous_logins(ctx: RunContextWrapper[ScenarioData]) -> str:
     """
     scenario = ctx.context
     anomalies = []
-    known_malicious_ips = {"185.220.101.34", "91.219.237.12", "45.155.205.99", "193.56.28.103", "89.248.167.131"}
+    known_malicious_ips = {
+        "185.220.101.34",
+        "91.219.237.12",
+        "45.155.205.99",
+        "193.56.28.103",
+        "89.248.167.131",
+    }
 
     # Group logins by user
     user_logins: dict[str, list] = {}
@@ -86,37 +98,43 @@ def detect_anomalous_logins(ctx: RunContextWrapper[ScenarioData]) -> str:
         failures = [e for e in entries if e.action == "login_failure"]
         successes = [e for e in entries if e.action == "login_success"]
         if len(failures) >= 5:
-            anomalies.append({
-                "type": "brute_force_pattern",
-                "severity": "critical",
-                "user": user,
-                "description": f"{len(failures)} failed login attempts detected for user {user}",
-                "failed_count": len(failures),
-                "source_ips": list(set(e.source_ip for e in failures)),
-            })
+            anomalies.append(
+                {
+                    "type": "brute_force_pattern",
+                    "severity": "critical",
+                    "user": user,
+                    "description": f"{len(failures)} failed login attempts detected for user {user}",
+                    "failed_count": len(failures),
+                    "source_ips": list(set(e.source_ip for e in failures)),
+                }
+            )
 
         # Check for impossible travel: different geolocations in short time
         geos = list(set(e.geo_location for e in successes))
         if len(geos) > 1:
-            anomalies.append({
-                "type": "impossible_travel",
-                "severity": "high",
-                "user": user,
-                "description": f"User {user} logged in from {len(geos)} different locations: {', '.join(geos)}",
-                "locations": geos,
-            })
+            anomalies.append(
+                {
+                    "type": "impossible_travel",
+                    "severity": "high",
+                    "user": user,
+                    "description": f"User {user} logged in from {len(geos)} different locations: {', '.join(geos)}",
+                    "locations": geos,
+                }
+            )
 
         # Check for logins from malicious IPs
         mal_logins = [e for e in entries if e.source_ip in known_malicious_ips]
         if mal_logins:
-            anomalies.append({
-                "type": "malicious_ip_login",
-                "severity": "critical",
-                "user": user,
-                "description": f"Login from known malicious IP(s) for user {user}",
-                "malicious_ips": list(set(e.source_ip for e in mal_logins)),
-                "count": len(mal_logins),
-            })
+            anomalies.append(
+                {
+                    "type": "malicious_ip_login",
+                    "severity": "critical",
+                    "user": user,
+                    "description": f"Login from known malicious IP(s) for user {user}",
+                    "malicious_ips": list(set(e.source_ip for e in mal_logins)),
+                    "count": len(mal_logins),
+                }
+            )
 
     logger.info("Detected %d login anomalies", len(anomalies))
     return json.dumps(anomalies, indent=2)
@@ -137,21 +155,24 @@ def check_privilege_changes(ctx: RunContextWrapper[ScenarioData]) -> str:
     """
     scenario = ctx.context
     priv_events = [
-        entry for entry in scenario.auth_logs
-        if entry.action in ("role_change", "sudo")
+        entry for entry in scenario.auth_logs if entry.action in ("role_change", "sudo")
     ]
 
     results = []
     for event in priv_events:
-        results.append({
-            "timestamp": event.timestamp,
-            "user": event.user,
-            "action": event.action,
-            "source_ip": event.source_ip,
-            "geo_location": event.geo_location,
-            "session_id": event.session_id,
-            "risk_assessment": "high" if event.action == "role_change" else "medium",
-        })
+        results.append(
+            {
+                "timestamp": event.timestamp,
+                "user": event.user,
+                "action": event.action,
+                "source_ip": event.source_ip,
+                "geo_location": event.geo_location,
+                "session_id": event.session_id,
+                "risk_assessment": (
+                    "high" if event.action == "role_change" else "medium"
+                ),
+            }
+        )
 
     logger.info("Found %d privilege change events", len(results))
     return json.dumps(results, indent=2)

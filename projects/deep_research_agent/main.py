@@ -12,23 +12,21 @@ Usage:
 import asyncio
 import logging
 
-from agents import (
-    AgentHooks,
-    AsyncOpenAI,
-    ModelSettings,
-    OpenAIChatCompletionsModel,
-    RunConfig,
-    Runner,
-    set_tracing_disabled,
-)
-
-from deep_research_agent.agents.academic_researcher import create_academic_researcher_agent
-from deep_research_agent.agents.content_extractor import create_content_extractor_agent
-from deep_research_agent.agents.news_researcher import create_news_researcher_agent
+from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
+                    OpenAIChatCompletionsModel, RunConfig, Runner,
+                    set_tracing_disabled)
+from deep_research_agent.agents.academic_researcher import \
+    create_academic_researcher_agent
+from deep_research_agent.agents.content_extractor import \
+    create_content_extractor_agent
+from deep_research_agent.agents.news_researcher import \
+    create_news_researcher_agent
 from deep_research_agent.agents.report_writer import create_report_writer_agent
-from deep_research_agent.agents.research_planner import create_research_planner_agent
+from deep_research_agent.agents.research_planner import \
+    create_research_planner_agent
 from deep_research_agent.agents.synthesizer import create_synthesizer_agent
-from deep_research_agent.agents.web_researcher import create_web_researcher_agent
+from deep_research_agent.agents.web_researcher import \
+    create_web_researcher_agent
 from deep_research_agent.models.research import ResearchContext
 from deep_research_agent.utils.config import load_config
 
@@ -130,7 +128,9 @@ def create_openrouter_model() -> OpenAIChatCompletionsModel:
         openai_client=client,
     )
 
-    logger.info("OpenRouter model configured: base_url=%s, model=%s", base_url, model_name)
+    logger.info(
+        "OpenRouter model configured: base_url=%s, model=%s", base_url, model_name
+    )
     return model
 
 
@@ -155,16 +155,26 @@ def build_agent_pipeline(model: OpenAIChatCompletionsModel, hooks: AgentHooks):
     synthesizer = create_synthesizer_agent(report_writer, hooks=hooks)
     content_extractor = create_content_extractor_agent(synthesizer, hooks=hooks)
     web_researcher = create_web_researcher_agent(content_extractor, hooks=hooks)
-    academic_researcher = create_academic_researcher_agent(content_extractor, hooks=hooks)
+    academic_researcher = create_academic_researcher_agent(
+        content_extractor, hooks=hooks
+    )
     news_researcher = create_news_researcher_agent(content_extractor, hooks=hooks)
     research_planner = create_research_planner_agent(
-        web_researcher, academic_researcher, news_researcher, hooks=hooks,
+        web_researcher,
+        academic_researcher,
+        news_researcher,
+        hooks=hooks,
     )
 
     # Set model on all agents to use OpenRouter via Chat Completions
     all_agents = [
-        research_planner, web_researcher, academic_researcher,
-        news_researcher, content_extractor, synthesizer, report_writer,
+        research_planner,
+        web_researcher,
+        academic_researcher,
+        news_researcher,
+        content_extractor,
+        synthesizer,
+        report_writer,
     ]
     for agent in all_agents:
         agent.model = model

@@ -49,9 +49,7 @@ USER_AGENTS = [
 ]
 
 
-def _generate_baseline_auth_logs(
-    base_time: datetime, count: int
-) -> list[AuthLogEntry]:
+def _generate_baseline_auth_logs(base_time: datetime, count: int) -> list[AuthLogEntry]:
     """Generate normal baseline authentication log entries.
 
     Args:

@@ -6,14 +6,9 @@ technical research queries.
 """
 
 from agents import Agent, ModelSettings
-
 from deep_research_agent.tools.academic_tools import (
-    arxiv_search,
-    semantic_scholar_get_paper,
-    semantic_scholar_search,
-    wikipedia_get_page,
-    wikipedia_search,
-)
+    arxiv_search, semantic_scholar_get_paper, semantic_scholar_search,
+    wikipedia_get_page, wikipedia_search)
 
 ACADEMIC_RESEARCHER_INSTRUCTIONS = """You are the Academic Researcher Agent. You search academic and encyclopedic sources, then IMMEDIATELY hand off to the Content Extractor Agent. You NEVER produce a final answer yourself.
 

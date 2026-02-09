@@ -10,9 +10,7 @@ from datetime import datetime, timezone
 
 import feedparser
 import httpx
-
 from agents import RunContextWrapper, function_tool
-
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
@@ -45,13 +43,19 @@ def google_news_rss(
     feed = feedparser.parse(rss_url)
 
     results = []
-    for entry in feed.entries[:min(max_results, 10)]:
-        results.append({
-            "title": entry.get("title", ""),
-            "url": entry.get("link", ""),
-            "published": entry.get("published", ""),
-            "source": entry.get("source", {}).get("title", "") if isinstance(entry.get("source"), dict) else "",
-        })
+    for entry in feed.entries[: min(max_results, 10)]:
+        results.append(
+            {
+                "title": entry.get("title", ""),
+                "url": entry.get("link", ""),
+                "published": entry.get("published", ""),
+                "source": (
+                    entry.get("source", {}).get("title", "")
+                    if isinstance(entry.get("source"), dict)
+                    else ""
+                ),
+            }
+        )
 
     output = {
         "query": query,
@@ -89,7 +93,12 @@ def reddit_search(
 
     if subreddit:
         url = f"https://www.reddit.com/r/{subreddit}/search.json"
-        params = {"q": query, "limit": min(max_results, 10), "sort": "relevance", "restrict_sr": "on"}
+        params = {
+            "q": query,
+            "limit": min(max_results, 10),
+            "sort": "relevance",
+            "restrict_sr": "on",
+        }
     else:
         url = "https://www.reddit.com/search.json"
         params = {"q": query, "limit": min(max_results, 10), "sort": "relevance"}
@@ -104,15 +113,17 @@ def reddit_search(
     results = []
     for child in data.get("data", {}).get("children", []):
         post = child.get("data", {})
-        results.append({
-            "title": post.get("title", ""),
-            "url": f"https://www.reddit.com{post.get('permalink', '')}",
-            "subreddit": post.get("subreddit", ""),
-            "score": post.get("score", 0),
-            "num_comments": post.get("num_comments", 0),
-            "selftext": (post.get("selftext") or "")[:500],
-            "created_utc": post.get("created_utc", 0),
-        })
+        results.append(
+            {
+                "title": post.get("title", ""),
+                "url": f"https://www.reddit.com{post.get('permalink', '')}",
+                "subreddit": post.get("subreddit", ""),
+                "score": post.get("score", 0),
+                "num_comments": post.get("num_comments", 0),
+                "selftext": (post.get("selftext") or "")[:500],
+                "created_utc": post.get("created_utc", 0),
+            }
+        )
 
     output = {
         "query": query,

@@ -9,9 +9,10 @@ import logging
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
-from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
-from aiops_incident_response_agent.simulators.metrics_simulator import SERVICE_DEPENDENCIES
+from aiops_incident_response_agent.simulators.metrics_simulator import \
+    SERVICE_DEPENDENCIES
+from aiops_incident_response_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,9 @@ def query_metrics(
         metrics = [m for m in metrics if m.metric_name == metric_name]
 
     metrics = metrics[:limit]
-    logger.info("Queried %d metrics (service=%s, metric=%s)", len(metrics), service, metric_name)
+    logger.info(
+        "Queried %d metrics (service=%s, metric=%s)", len(metrics), service, metric_name
+    )
     return json.dumps([asdict(m) for m in metrics], indent=2)
 
 
@@ -89,7 +92,8 @@ def detect_anomalies(ctx: RunContextWrapper[ScenarioData]) -> str:
 
             baseline_mean = sum(baseline) / len(baseline)
             baseline_std = max(
-                (sum((v - baseline_mean) ** 2 for v in baseline) / len(baseline)) ** 0.5,
+                (sum((v - baseline_mean) ** 2 for v in baseline) / len(baseline))
+                ** 0.5,
                 0.01,
             )
 
@@ -101,21 +105,30 @@ def detect_anomalies(ctx: RunContextWrapper[ScenarioData]) -> str:
             z_score = abs(recent_mean - baseline_mean) / baseline_std
             if z_score > 2.0:
                 anomaly_type = "spike" if recent_mean > baseline_mean else "drop"
-                if metric_name in ("error_rate", "latency_p99_ms") and recent_mean > baseline_mean:
+                if (
+                    metric_name in ("error_rate", "latency_p99_ms")
+                    and recent_mean > baseline_mean
+                ):
                     anomaly_type = "spike"
                 elif metric_name == "request_rate" and recent_mean < baseline_mean:
                     anomaly_type = "drop"
 
-                anomalies.append({
-                    "service": service,
-                    "metric_name": metric_name,
-                    "current_value": round(recent_mean, 2),
-                    "expected_range_low": round(baseline_mean - 2 * baseline_std, 2),
-                    "expected_range_high": round(baseline_mean + 2 * baseline_std, 2),
-                    "anomaly_type": anomaly_type,
-                    "confidence": round(min(z_score / 5.0, 1.0), 2),
-                    "peak_value": round(recent_max, 2),
-                })
+                anomalies.append(
+                    {
+                        "service": service,
+                        "metric_name": metric_name,
+                        "current_value": round(recent_mean, 2),
+                        "expected_range_low": round(
+                            baseline_mean - 2 * baseline_std, 2
+                        ),
+                        "expected_range_high": round(
+                            baseline_mean + 2 * baseline_std, 2
+                        ),
+                        "anomaly_type": anomaly_type,
+                        "confidence": round(min(z_score / 5.0, 1.0), 2),
+                        "peak_value": round(recent_max, 2),
+                    }
+                )
 
     anomalies.sort(key=lambda a: a["confidence"], reverse=True)
     logger.info("Detected %d anomalies", len(anomalies))

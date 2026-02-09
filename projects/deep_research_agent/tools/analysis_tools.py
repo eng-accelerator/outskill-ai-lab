@@ -12,24 +12,44 @@ from datetime import datetime, timezone
 from urllib.parse import urlparse
 
 from agents import RunContextWrapper, function_tool
-
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
 
 # Domain credibility tiers (well-known sources)
 _HIGH_CREDIBILITY_DOMAINS = {
-    "wikipedia.org", "arxiv.org", "nature.com", "science.org",
-    "ieee.org", "acm.org", "nih.gov", "gov", "edu",
-    "bbc.com", "reuters.com", "apnews.com", "nytimes.com",
-    "washingtonpost.com", "theguardian.com", "github.com",
-    "stackoverflow.com", "semanticscholar.org",
+    "wikipedia.org",
+    "arxiv.org",
+    "nature.com",
+    "science.org",
+    "ieee.org",
+    "acm.org",
+    "nih.gov",
+    "gov",
+    "edu",
+    "bbc.com",
+    "reuters.com",
+    "apnews.com",
+    "nytimes.com",
+    "washingtonpost.com",
+    "theguardian.com",
+    "github.com",
+    "stackoverflow.com",
+    "semanticscholar.org",
 }
 
 _MEDIUM_CREDIBILITY_DOMAINS = {
-    "medium.com", "substack.com", "dev.to", "hackernews.com",
-    "reddit.com", "quora.com", "youtube.com", "techcrunch.com",
-    "theverge.com", "arstechnica.com", "wired.com",
+    "medium.com",
+    "substack.com",
+    "dev.to",
+    "hackernews.com",
+    "reddit.com",
+    "quora.com",
+    "youtube.com",
+    "techcrunch.com",
+    "theverge.com",
+    "arstechnica.com",
+    "wired.com",
 }
 
 
@@ -152,23 +172,37 @@ def extract_key_claims(
         has_number = bool(re.search(r"\d+", sentence))
         has_date = bool(re.search(r"\b(19|20)\d{2}\b", sentence))
         has_percentage = bool(re.search(r"\d+%", sentence))
-        has_comparison = any(w in sentence.lower() for w in [
-            "more than", "less than", "greater", "higher", "lower",
-            "increased", "decreased", "according to", "found that",
-            "showed that", "demonstrated", "reported",
-        ])
+        has_comparison = any(
+            w in sentence.lower()
+            for w in [
+                "more than",
+                "less than",
+                "greater",
+                "higher",
+                "lower",
+                "increased",
+                "decreased",
+                "according to",
+                "found that",
+                "showed that",
+                "demonstrated",
+                "reported",
+            ]
+        )
 
         claim_score = sum([has_number, has_date, has_percentage, has_comparison])
 
         if claim_score >= 1:
-            claims.append({
-                "claim": sentence[:300],
-                "has_statistics": has_number or has_percentage,
-                "has_date": has_date,
-                "has_attribution": has_comparison,
-                "strength": "strong" if claim_score >= 2 else "moderate",
-                "source_url": source_url,
-            })
+            claims.append(
+                {
+                    "claim": sentence[:300],
+                    "has_statistics": has_number or has_percentage,
+                    "has_date": has_date,
+                    "has_attribution": has_comparison,
+                    "strength": "strong" if claim_score >= 2 else "moderate",
+                    "source_url": source_url,
+                }
+            )
 
     # Limit to top 10 most notable claims
     claims = sorted(claims, key=lambda c: c["strength"] == "strong", reverse=True)[:10]
@@ -225,12 +259,14 @@ def cross_reference_findings(
         else:
             stance = "unrelated"
 
-        analysis.append({
-            "source_url": source.get("url", ""),
-            "stance": stance,
-            "overlap_ratio": round(overlap_ratio, 2),
-            "matching_terms": list(overlap)[:10],
-        })
+        analysis.append(
+            {
+                "source_url": source.get("url", ""),
+                "stance": stance,
+                "overlap_ratio": round(overlap_ratio, 2),
+                "matching_terms": list(overlap)[:10],
+            }
+        )
 
     supporting = sum(1 for a in analysis if a["stance"] == "supporting")
     neutral = sum(1 for a in analysis if a["stance"] == "neutral")
@@ -243,12 +279,18 @@ def cross_reference_findings(
             "supporting": supporting,
             "neutral": neutral,
             "unrelated": len(analysis) - supporting - neutral,
-            "consensus": "strong" if supporting >= 2 else "moderate" if supporting >= 1 else "weak",
+            "consensus": (
+                "strong"
+                if supporting >= 2
+                else "moderate" if supporting >= 1 else "weak"
+            ),
         },
         "analyzed_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info("Cross-reference: %d supporting, %d neutral for claim", supporting, neutral)
+    logger.info(
+        "Cross-reference: %d supporting, %d neutral for claim", supporting, neutral
+    )
     return json.dumps(output, indent=2)
 
 
@@ -285,12 +327,14 @@ def identify_knowledge_gaps(
         overlap = q_words & f_words
         coverage = len(overlap) / max(len(q_words), 1)
 
-        analysis.append({
-            "question": question,
-            "coverage": round(coverage, 2),
-            "likely_answered": coverage > 0.4,
-            "matching_terms": list(overlap)[:5],
-        })
+        analysis.append(
+            {
+                "question": question,
+                "coverage": round(coverage, 2),
+                "likely_answered": coverage > 0.4,
+                "matching_terms": list(overlap)[:5],
+            }
+        )
 
     answered = sum(1 for a in analysis if a["likely_answered"])
     unanswered = len(analysis) - answered
@@ -335,7 +379,10 @@ def calculate_confidence_score(
     """
     logger.info(
         "Calculating confidence: sources=%d, high_cred=%d, agreeing=%d, coverage=%d%%",
-        total_sources, high_credibility_count, agreeing_sources, coverage_pct,
+        total_sources,
+        high_credibility_count,
+        agreeing_sources,
+        coverage_pct,
     )
 
     factors = []
@@ -350,13 +397,17 @@ def calculate_confidence_score(
     quality_ratio = high_credibility_count / max(total_sources, 1)
     quality_score = quality_ratio * 25
     score += quality_score
-    factors.append(f"Source quality: {quality_score:.0f}/25 ({high_credibility_count} high-credibility)")
+    factors.append(
+        f"Source quality: {quality_score:.0f}/25 ({high_credibility_count} high-credibility)"
+    )
 
     # Agreement (0-25 points)
     agree_ratio = agreeing_sources / max(total_sources, 1)
     agree_score = agree_ratio * 25
     score += agree_score
-    factors.append(f"Source agreement: {agree_score:.0f}/25 ({agreeing_sources} agreeing)")
+    factors.append(
+        f"Source agreement: {agree_score:.0f}/25 ({agreeing_sources} agreeing)"
+    )
 
     # Coverage (0-25 points)
     coverage_score = coverage_pct * 0.25

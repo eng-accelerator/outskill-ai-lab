@@ -7,12 +7,18 @@ C2 beaconing, data exfiltration, and normal traffic.
 import random
 from datetime import datetime, timedelta
 
-from cybersecurity_threat_detection_agent.models.analysis import NetworkLogEntry
+from cybersecurity_threat_detection_agent.models.analysis import \
+    NetworkLogEntry
 
 # Internal network ranges
 INTERNAL_IPS = [
-    "10.0.1.50", "10.0.2.15", "10.0.2.22", "10.0.3.10",
-    "10.0.2.45", "10.0.10.5", "10.0.10.6",
+    "10.0.1.50",
+    "10.0.2.15",
+    "10.0.2.22",
+    "10.0.3.10",
+    "10.0.2.45",
+    "10.0.10.5",
+    "10.0.10.6",
 ]
 
 # Known malicious external IPs
@@ -33,10 +39,10 @@ C2_IPS = [
 
 # Common legitimate external IPs
 LEGITIMATE_EXTERNAL_IPS = [
-    "13.107.42.14",   # Microsoft
+    "13.107.42.14",  # Microsoft
     "142.250.80.46",  # Google
-    "52.84.125.10",   # AWS CloudFront
-    "104.18.32.7",    # Cloudflare
+    "52.84.125.10",  # AWS CloudFront
+    "104.18.32.7",  # Cloudflare
 ]
 
 COMMON_PORTS = [80, 443, 8080, 8443, 53, 22, 3389, 3306, 5432]

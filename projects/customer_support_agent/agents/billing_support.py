@@ -5,13 +5,10 @@ including double charges, subscription changes, refund requests, and invoice dis
 """
 
 from agents import Agent, ModelSettings
-
-from customer_support_agent.tools.billing_tools import (
-    check_payment_status,
-    get_billing_info,
-    process_refund,
-    update_subscription,
-)
+from customer_support_agent.tools.billing_tools import (check_payment_status,
+                                                        get_billing_info,
+                                                        process_refund,
+                                                        update_subscription)
 
 BILLING_SUPPORT_INSTRUCTIONS = """You are an expert Billing Support Agent. Your role is to investigate and resolve billing-related customer issues.
 
@@ -71,7 +68,12 @@ def create_billing_support_agent(
     return Agent(
         name="Billing Support Agent",
         instructions=BILLING_SUPPORT_INSTRUCTIONS,
-        tools=[get_billing_info, process_refund, update_subscription, check_payment_status],
+        tools=[
+            get_billing_info,
+            process_refund,
+            update_subscription,
+            check_payment_status,
+        ],
         handoffs=[escalation_agent, resolution_agent],
         hooks=hooks,
         model_settings=ModelSettings(temperature=0.2),

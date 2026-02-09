@@ -6,14 +6,9 @@ and produces a coherent synthesis for the report writer.
 """
 
 from agents import Agent, ModelSettings
-
 from deep_research_agent.tools.analysis_tools import (
-    calculate_confidence_score,
-    cross_reference_findings,
-    evaluate_source_credibility,
-    extract_key_claims,
-    identify_knowledge_gaps,
-)
+    calculate_confidence_score, cross_reference_findings,
+    evaluate_source_credibility, extract_key_claims, identify_knowledge_gaps)
 
 SYNTHESIZER_INSTRUCTIONS = """You are the Synthesizer Agent. You evaluate sources, cross-reference findings, and then IMMEDIATELY hand off to the Report Writer Agent. You NEVER produce a final answer yourself.
 

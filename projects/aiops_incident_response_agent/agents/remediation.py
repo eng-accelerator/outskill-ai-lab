@@ -5,14 +5,11 @@ using runbooks and action proposals, then hands off to the reporter.
 """
 
 from agents import Agent, ModelSettings
-
-from aiops_incident_response_agent.guardrails.remediation_safety import remediation_output_guardrail
+from aiops_incident_response_agent.guardrails.remediation_safety import \
+    remediation_output_guardrail
 from aiops_incident_response_agent.tools.remediation_tools import (
-    lookup_runbook,
-    propose_config_change,
-    propose_rollback,
-    propose_scaling_action,
-)
+    lookup_runbook, propose_config_change, propose_rollback,
+    propose_scaling_action)
 
 REMEDIATION_INSTRUCTIONS = """You are an expert Remediation Agent. Your role is to propose safe, effective fixes for incidents.
 

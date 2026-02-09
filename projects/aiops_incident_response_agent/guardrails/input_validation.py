@@ -6,9 +6,10 @@ before the agent pipeline processes it.
 
 import logging
 
-from agents import Agent, GuardrailFunctionOutput, InputGuardrail, RunContextWrapper
-
-from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
+from agents import (Agent, GuardrailFunctionOutput, InputGuardrail,
+                    RunContextWrapper)
+from aiops_incident_response_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,9 @@ async def validate_incident_input(
 
     logger.info(
         "Input validation passed: alerts=%d, health=%d, logs=%d",
-        len(scenario.alerts), len(scenario.service_health), len(scenario.logs),
+        len(scenario.alerts),
+        len(scenario.service_health),
+        len(scenario.logs),
     )
     return GuardrailFunctionOutput(
         output_info="Incident data validated successfully.",

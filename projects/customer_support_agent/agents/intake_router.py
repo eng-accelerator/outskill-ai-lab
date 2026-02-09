@@ -6,9 +6,10 @@ issue intent, and routes to the appropriate specialist agent.
 """
 
 from agents import Agent, ModelSettings
-
-from customer_support_agent.guardrails.input_validation import support_input_guardrail
-from customer_support_agent.tools.customer_tools import analyze_sentiment, fetch_customer_profile
+from customer_support_agent.guardrails.input_validation import \
+    support_input_guardrail
+from customer_support_agent.tools.customer_tools import (
+    analyze_sentiment, fetch_customer_profile)
 
 INTAKE_ROUTER_INSTRUCTIONS = """You are an expert Customer Support Intake & Router Agent. Your role is to perform initial assessment and route to the right specialist.
 

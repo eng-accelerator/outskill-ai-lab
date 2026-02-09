@@ -9,29 +9,23 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Literal
 
-from customer_support_agent.models.billing import Invoice, Payment, Refund, Subscription
+from customer_support_agent.models.billing import (Invoice, Payment, Refund,
+                                                   Subscription)
 from customer_support_agent.models.customer import CustomerProfile
 from customer_support_agent.models.orders import Order, Return
 from customer_support_agent.models.support import KBArticle, SupportTicket
 from customer_support_agent.simulators.billing_simulator import (
-    generate_billing_dispute_billing,
-    generate_complex_escalation_billing,
-    generate_delayed_order_billing,
-    generate_refund_request_billing,
-    generate_technical_issue_billing,
-)
+    generate_billing_dispute_billing, generate_complex_escalation_billing,
+    generate_delayed_order_billing, generate_refund_request_billing,
+    generate_technical_issue_billing)
 from customer_support_agent.simulators.customer_simulator import (
-    generate_customer_profiles,
-    get_customer_by_id,
-)
-from customer_support_agent.simulators.knowledge_base_simulator import generate_knowledge_base
+    generate_customer_profiles, get_customer_by_id)
+from customer_support_agent.simulators.knowledge_base_simulator import \
+    generate_knowledge_base
 from customer_support_agent.simulators.order_simulator import (
-    generate_billing_dispute_data,
-    generate_complex_escalation_data,
-    generate_delayed_order_data,
-    generate_refund_request_data,
-    generate_technical_issue_data,
-)
+    generate_billing_dispute_data, generate_complex_escalation_data,
+    generate_delayed_order_data, generate_refund_request_data,
+    generate_technical_issue_data)
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +146,9 @@ class ScenarioData:
     ticket: SupportTicket | None = None
 
 
-def _generate_ticket(scenario_type: ScenarioType, customer_id: str, base_time: datetime) -> SupportTicket:
+def _generate_ticket(
+    scenario_type: ScenarioType, customer_id: str, base_time: datetime
+) -> SupportTicket:
     """Generate a support ticket for the given scenario.
 
     Args:
@@ -272,7 +268,12 @@ def generate_scenario(scenario_type: ScenarioType) -> ScenarioData:
 
     logger.info(
         "Scenario generated: orders=%d, returns=%d, subs=%d, invoices=%d, payments=%d, kb=%d",
-        len(orders), len(returns), len(subs), len(invoices), len(payments), len(knowledge_base),
+        len(orders),
+        len(returns),
+        len(subs),
+        len(invoices),
+        len(payments),
+        len(knowledge_base),
     )
 
     return ScenarioData(

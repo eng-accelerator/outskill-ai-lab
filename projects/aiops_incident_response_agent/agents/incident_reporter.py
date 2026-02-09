@@ -6,11 +6,8 @@ This is the terminal agent in the pipeline (no handoffs).
 """
 
 from agents import Agent, ModelSettings
-
 from aiops_incident_response_agent.tools.notification_tools import (
-    format_incident_report,
-    generate_timeline,
-)
+    format_incident_report, generate_timeline)
 
 REPORTER_INSTRUCTIONS = """You are an expert Incident Reporter Agent. Your role is to produce a clear, comprehensive incident report.
 

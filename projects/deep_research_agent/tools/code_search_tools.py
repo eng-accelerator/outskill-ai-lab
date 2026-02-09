@@ -9,9 +9,7 @@ import logging
 from datetime import datetime, timezone
 
 import httpx
-
 from agents import RunContextWrapper, function_tool
-
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
@@ -57,16 +55,18 @@ def github_search_repos(
 
     results = []
     for repo in data.get("items", []):
-        results.append({
-            "name": repo.get("full_name", ""),
-            "url": repo.get("html_url", ""),
-            "description": (repo.get("description") or "")[:300],
-            "stars": repo.get("stargazers_count", 0),
-            "forks": repo.get("forks_count", 0),
-            "language": repo.get("language", ""),
-            "topics": repo.get("topics", [])[:5],
-            "updated_at": repo.get("updated_at", ""),
-        })
+        results.append(
+            {
+                "name": repo.get("full_name", ""),
+                "url": repo.get("html_url", ""),
+                "description": (repo.get("description") or "")[:300],
+                "stars": repo.get("stargazers_count", 0),
+                "forks": repo.get("forks_count", 0),
+                "language": repo.get("language", ""),
+                "topics": repo.get("topics", [])[:5],
+                "updated_at": repo.get("updated_at", ""),
+            }
+        )
 
     output = {
         "query": query,
@@ -125,18 +125,21 @@ def stackexchange_search(
         body = item.get("body", "")
         # Simple HTML tag removal for preview
         import re
+
         body_clean = re.sub(r"<[^>]+>", "", body)[:500]
 
-        results.append({
-            "title": item.get("title", ""),
-            "url": item.get("link", ""),
-            "score": item.get("score", 0),
-            "answer_count": item.get("answer_count", 0),
-            "is_answered": item.get("is_answered", False),
-            "body_preview": body_clean,
-            "tags": item.get("tags", [])[:5],
-            "creation_date": item.get("creation_date", 0),
-        })
+        results.append(
+            {
+                "title": item.get("title", ""),
+                "url": item.get("link", ""),
+                "score": item.get("score", 0),
+                "answer_count": item.get("answer_count", 0),
+                "is_answered": item.get("is_answered", False),
+                "body_preview": body_clean,
+                "tags": item.get("tags", [])[:5],
+                "creation_date": item.get("creation_date", 0),
+            }
+        )
 
     output = {
         "query": query,

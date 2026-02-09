@@ -7,8 +7,8 @@ and meets minimum quality standards before delivery to the user.
 import logging
 import re
 
-from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
-
+from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
+                    RunContextWrapper)
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
@@ -18,19 +18,19 @@ _MIN_REPORT_LENGTH = 200
 
 # Patterns that indicate citation presence
 _CITATION_PATTERNS = [
-    r"https?://",          # URLs
-    r"\[\d+\]",           # Numbered references [1]
-    r"Source:",            # Source labels
-    r"Bibliography",      # Bibliography section
-    r"References",        # References section
+    r"https?://",  # URLs
+    r"\[\d+\]",  # Numbered references [1]
+    r"Source:",  # Source labels
+    r"Bibliography",  # Bibliography section
+    r"References",  # References section
 ]
 
 # Patterns that indicate structured output
 _STRUCTURE_PATTERNS = [
-    r"#{1,3}\s",          # Markdown headings
-    r"\*\*[^*]+\*\*",    # Bold text
-    r"^\d+\.\s",         # Numbered lists
-    r"^-\s",             # Bullet lists
+    r"#{1,3}\s",  # Markdown headings
+    r"\*\*[^*]+\*\*",  # Bold text
+    r"^\d+\.\s",  # Numbered lists
+    r"^-\s",  # Bullet lists
 ]
 
 
@@ -58,7 +58,9 @@ async def validate_report_quality(
 
     # Check minimum length
     if len(output_text) < _MIN_REPORT_LENGTH:
-        logger.warning("Report quality check FAILED: report too short (%d chars)", len(output_text))
+        logger.warning(
+            "Report quality check FAILED: report too short (%d chars)", len(output_text)
+        )
         return GuardrailFunctionOutput(
             output_info="Report is too short. A comprehensive research report should be at least 200 characters.",
             tripwire_triggered=True,
@@ -74,7 +76,9 @@ async def validate_report_quality(
         )
 
     # Check for structure (at least one structural element)
-    has_structure = any(re.search(p, output_text, re.MULTILINE) for p in _STRUCTURE_PATTERNS)
+    has_structure = any(
+        re.search(p, output_text, re.MULTILINE) for p in _STRUCTURE_PATTERNS
+    )
     if not has_structure:
         logger.warning("Report quality check WARNING: no structured sections found")
         # This is a soft warning, not a tripwire

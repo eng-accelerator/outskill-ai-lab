@@ -10,7 +10,6 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 
 from agents import RunContextWrapper, function_tool
-
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
@@ -75,7 +74,11 @@ def track_shipment(ctx: RunContextWrapper[ScenarioData], tracking_number: str) -
                     "note": "Package may be experiencing carrier delays. Contact carrier for investigation.",
                 }
 
-            logger.info("Found shipment %s with status: %s", tracking_number, order.shipment.status)
+            logger.info(
+                "Found shipment %s with status: %s",
+                tracking_number,
+                order.shipment.status,
+            )
             return json.dumps(shipment_data, indent=2)
 
     logger.warning("Shipment not found: %s", tracking_number)
@@ -83,7 +86,9 @@ def track_shipment(ctx: RunContextWrapper[ScenarioData], tracking_number: str) -
 
 
 @function_tool
-def process_return(ctx: RunContextWrapper[ScenarioData], order_id: str, reason: str) -> str:
+def process_return(
+    ctx: RunContextWrapper[ScenarioData], order_id: str, reason: str
+) -> str:
     """Initiate a return for an order and generate an RMA number.
 
     Creates a return request in the system. The customer will receive
@@ -111,19 +116,23 @@ def process_return(ctx: RunContextWrapper[ScenarioData], order_id: str, reason: 
         return json.dumps({"error": f"Order {order_id} not found"})
 
     if target_order.status not in ("delivered", "shipped"):
-        return json.dumps({
-            "error": f"Order {order_id} cannot be returned. Current status: {target_order.status}",
-        })
+        return json.dumps(
+            {
+                "error": f"Order {order_id} cannot be returned. Current status: {target_order.status}",
+            }
+        )
 
     # Check for existing return
     for ret in scenario.returns:
         if ret.order_id == order_id:
-            return json.dumps({
-                "return_id": ret.return_id,
-                "status": "already_requested",
-                "message": f"Return already initiated: {ret.return_id}",
-                "return_details": asdict(ret),
-            })
+            return json.dumps(
+                {
+                    "return_id": ret.return_id,
+                    "status": "already_requested",
+                    "message": f"Return already initiated: {ret.return_id}",
+                    "return_details": asdict(ret),
+                }
+            )
 
     # Create new return
     rma_number = f"RMA-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{order_id[-4:]}"
@@ -148,7 +157,9 @@ def process_return(ctx: RunContextWrapper[ScenarioData], order_id: str, reason: 
 
 
 @function_tool
-def modify_order(ctx: RunContextWrapper[ScenarioData], order_id: str, action: str) -> str:
+def modify_order(
+    ctx: RunContextWrapper[ScenarioData], order_id: str, action: str
+) -> str:
     """Modify an existing order (cancel or update).
 
     Performs the requested modification on the order. Cancellation is only
@@ -177,50 +188,64 @@ def modify_order(ctx: RunContextWrapper[ScenarioData], order_id: str, action: st
     match action:
         case "cancel":
             if target_order.status in ("pending", "confirmed", "processing"):
-                return json.dumps({
+                return json.dumps(
+                    {
+                        "order_id": order_id,
+                        "action": "cancel",
+                        "status": "cancelled",
+                        "message": f"Order {order_id} has been cancelled. Refund of ${target_order.total_amount:.2f} will be processed within 3-5 business days.",
+                    }
+                )
+            return json.dumps(
+                {
                     "order_id": order_id,
                     "action": "cancel",
-                    "status": "cancelled",
-                    "message": f"Order {order_id} has been cancelled. Refund of ${target_order.total_amount:.2f} will be processed within 3-5 business days.",
-                })
-            return json.dumps({
-                "order_id": order_id,
-                "action": "cancel",
-                "status": "failed",
-                "message": f"Cannot cancel order {order_id}. Current status: {target_order.status}. Please initiate a return instead.",
-            })
+                    "status": "failed",
+                    "message": f"Cannot cancel order {order_id}. Current status: {target_order.status}. Please initiate a return instead.",
+                }
+            )
 
         case "expedite_shipping":
             if target_order.status in ("shipped", "processing"):
-                return json.dumps({
+                return json.dumps(
+                    {
+                        "order_id": order_id,
+                        "action": "expedite_shipping",
+                        "status": "requested",
+                        "message": "Shipping expedite request submitted to carrier. Updated delivery estimate will be available within 24 hours.",
+                    }
+                )
+            return json.dumps(
+                {
                     "order_id": order_id,
                     "action": "expedite_shipping",
-                    "status": "requested",
-                    "message": "Shipping expedite request submitted to carrier. Updated delivery estimate will be available within 24 hours.",
-                })
-            return json.dumps({
-                "order_id": order_id,
-                "action": "expedite_shipping",
-                "status": "not_applicable",
-                "message": f"Cannot expedite. Order status: {target_order.status}.",
-            })
+                    "status": "not_applicable",
+                    "message": f"Cannot expedite. Order status: {target_order.status}.",
+                }
+            )
 
         case "update_address":
             if target_order.status in ("pending", "confirmed"):
-                return json.dumps({
+                return json.dumps(
+                    {
+                        "order_id": order_id,
+                        "action": "update_address",
+                        "status": "ready",
+                        "message": "Please provide the new shipping address to complete the update.",
+                    }
+                )
+            return json.dumps(
+                {
                     "order_id": order_id,
                     "action": "update_address",
-                    "status": "ready",
-                    "message": "Please provide the new shipping address to complete the update.",
-                })
-            return json.dumps({
-                "order_id": order_id,
-                "action": "update_address",
-                "status": "failed",
-                "message": f"Cannot update address. Order already in status: {target_order.status}.",
-            })
+                    "status": "failed",
+                    "message": f"Cannot update address. Order already in status: {target_order.status}.",
+                }
+            )
 
         case _:
-            return json.dumps({
-                "error": f"Unknown action: {action}. Supported actions: cancel, expedite_shipping, update_address",
-            })
+            return json.dumps(
+                {
+                    "error": f"Unknown action: {action}. Supported actions: cancel, expedite_shipping, update_address",
+                }
+            )

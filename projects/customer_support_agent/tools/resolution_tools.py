@@ -9,7 +9,6 @@ import logging
 from datetime import datetime, timezone
 
 from agents import RunContextWrapper, function_tool
-
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
@@ -29,8 +28,10 @@ def generate_resolution_summary(ctx: RunContextWrapper[ScenarioData]) -> str:
         str: JSON string with the resolution summary.
     """
     scenario = ctx.context
-    logger.info("Generating resolution summary for ticket: %s",
-                scenario.ticket.ticket_id if scenario.ticket else "N/A")
+    logger.info(
+        "Generating resolution summary for ticket: %s",
+        scenario.ticket.ticket_id if scenario.ticket else "N/A",
+    )
 
     ticket = scenario.ticket
 
@@ -44,7 +45,11 @@ def generate_resolution_summary(ctx: RunContextWrapper[ScenarioData]) -> str:
         "priority": ticket.priority if ticket else "medium",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "interaction_context": {
-            "original_query": scenario.customer_query[:200] + "..." if len(scenario.customer_query) > 200 else scenario.customer_query,
+            "original_query": (
+                scenario.customer_query[:200] + "..."
+                if len(scenario.customer_query) > 200
+                else scenario.customer_query
+            ),
             "orders_reviewed": len(scenario.orders),
             "returns_processed": len(scenario.returns),
             "billing_items_reviewed": len(scenario.invoices) + len(scenario.payments),
@@ -86,7 +91,10 @@ def predict_csat_score(
     scenario = ctx.context
     logger.info(
         "Predicting CSAT: quality=%s, time=%s, resolved=%s, escalated=%s",
-        resolution_quality, response_time, issue_resolved, escalated,
+        resolution_quality,
+        response_time,
+        issue_resolved,
+        escalated,
     )
 
     base_score = 3.0
@@ -135,7 +143,9 @@ def predict_csat_score(
     }
     tier_delta = tier_adjustment.get(scenario.customer.tier, 0.0)
     base_score += tier_delta
-    factors.append(f"Customer tier ({scenario.customer.tier}) expectation adjustment: {tier_delta:+.1f}")
+    factors.append(
+        f"Customer tier ({scenario.customer.tier}) expectation adjustment: {tier_delta:+.1f}"
+    )
 
     # Clamp to 1-5
     final_score = max(1, min(5, round(base_score)))
@@ -156,10 +166,14 @@ def predict_csat_score(
         "factors": factors,
         "customer_id": scenario.customer.customer_id,
         "customer_tier": scenario.customer.tier,
-        "recommendation": _get_follow_up_recommendation(final_score, scenario.customer.tier),
+        "recommendation": _get_follow_up_recommendation(
+            final_score, scenario.customer.tier
+        ),
     }
 
-    logger.info("CSAT prediction: score=%d (%s)", final_score, satisfaction_labels[final_score])
+    logger.info(
+        "CSAT prediction: score=%d (%s)", final_score, satisfaction_labels[final_score]
+    )
     return json.dumps(result, indent=2)
 
 

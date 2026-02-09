@@ -7,12 +7,8 @@ payments, and refunds for various customer support scenarios.
 import logging
 from datetime import datetime, timedelta, timezone
 
-from customer_support_agent.models.billing import (
-    Invoice,
-    Payment,
-    Refund,
-    Subscription,
-)
+from customer_support_agent.models.billing import (Invoice, Payment, Refund,
+                                                   Subscription)
 
 logger = logging.getLogger(__name__)
 
@@ -305,7 +301,9 @@ def generate_complex_escalation_billing(
             status="completed",
             issued_at=_iso(five_days_ago),
             due_date=_iso(five_days_ago),
-            items=["Enterprise Plan - Monthly (INCORRECT RATE: $149.99 instead of $99.99)"],
+            items=[
+                "Enterprise Plan - Monthly (INCORRECT RATE: $149.99 instead of $99.99)"
+            ],
         ),
         Invoice(
             invoice_id="INV-2024-0650",

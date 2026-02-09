@@ -6,11 +6,8 @@ This is the terminal agent in the support pipeline.
 """
 
 from agents import Agent, ModelSettings
-
 from customer_support_agent.tools.resolution_tools import (
-    generate_resolution_summary,
-    predict_csat_score,
-)
+    generate_resolution_summary, predict_csat_score)
 
 RESOLUTION_INSTRUCTIONS = """You are an expert Resolution & CSAT Agent. Your role is to compile the final resolution summary and predict customer satisfaction.
 

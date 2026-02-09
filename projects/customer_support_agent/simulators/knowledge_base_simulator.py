@@ -80,7 +80,6 @@ def generate_knowledge_base() -> list[KBArticle]:
             tags=["shipping", "delay", "lost", "package", "delivery"],
             helpful_count=423,
         ),
-
         # Billing-related articles
         KBArticle(
             article_id="KB-010",
@@ -141,7 +140,6 @@ def generate_knowledge_base() -> list[KBArticle]:
             tags=["refund", "billing", "charge", "double-charge"],
             helpful_count=445,
         ),
-
         # Technical support articles
         KBArticle(
             article_id="KB-020",
@@ -209,7 +207,6 @@ def generate_knowledge_base() -> list[KBArticle]:
             tags=["smart-watch", "setup", "screen", "battery", "warranty"],
             helpful_count=178,
         ),
-
         # Account management articles
         KBArticle(
             article_id="KB-030",
@@ -243,7 +240,6 @@ def generate_knowledge_base() -> list[KBArticle]:
             tags=["account", "update", "email", "settings"],
             helpful_count=156,
         ),
-
         # General articles
         KBArticle(
             article_id="KB-040",

@@ -9,7 +9,6 @@ import logging
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
@@ -75,7 +74,9 @@ def search_knowledge_base(ctx: RunContextWrapper[ScenarioData], query: str) -> s
         "articles": top_articles,
     }
 
-    logger.info("Knowledge base search returned %d results for '%s'", len(top_articles), query)
+    logger.info(
+        "Knowledge base search returned %d results for '%s'", len(top_articles), query
+    )
     return json.dumps(result, indent=2)
 
 
@@ -194,12 +195,22 @@ def run_diagnostics(ctx: RunContextWrapper[ScenarioData], customer_id: str) -> s
                 "recommendation": "Account may be locked after 5 failed attempts. Consider manual unlock.",
             },
             "api_keys": {
-                "status": "warning" if scenario.scenario_type == "technical_issue" else "ok",
+                "status": (
+                    "warning" if scenario.scenario_type == "technical_issue" else "ok"
+                ),
                 "details": (
-                    "API key last used: 24 hours ago. Current API gateway status: DEGRADED. "
-                    "Known issue: intermittent 401 errors affecting some keys."
-                ) if scenario.scenario_type == "technical_issue" else "API key active and functioning normally.",
-                "recommendation": "Wait for API gateway fix (ETA: 4 hours) or regenerate API key." if scenario.scenario_type == "technical_issue" else "No action needed.",
+                    (
+                        "API key last used: 24 hours ago. Current API gateway status: DEGRADED. "
+                        "Known issue: intermittent 401 errors affecting some keys."
+                    )
+                    if scenario.scenario_type == "technical_issue"
+                    else "API key active and functioning normally."
+                ),
+                "recommendation": (
+                    "Wait for API gateway fix (ETA: 4 hours) or regenerate API key."
+                    if scenario.scenario_type == "technical_issue"
+                    else "No action needed."
+                ),
             },
             "subscription": {
                 "status": "ok",
@@ -222,5 +233,9 @@ def run_diagnostics(ctx: RunContextWrapper[ScenarioData], customer_id: str) -> s
         ),
     }
 
-    logger.info("Diagnostics complete for %s: overall=%s", customer_id, diagnostics["overall_health"])
+    logger.info(
+        "Diagnostics complete for %s: overall=%s",
+        customer_id,
+        diagnostics["overall_health"],
+    )
     return json.dumps(diagnostics, indent=2)

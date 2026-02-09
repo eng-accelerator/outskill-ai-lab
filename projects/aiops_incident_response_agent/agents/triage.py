@@ -6,9 +6,10 @@ severity and category, and hands off to the appropriate analysis agent.
 """
 
 from agents import Agent, ModelSettings
-
-from aiops_incident_response_agent.guardrails.input_validation import incident_input_guardrail
-from aiops_incident_response_agent.tools.alert_tools import fetch_active_alerts, get_service_health_summary
+from aiops_incident_response_agent.guardrails.input_validation import \
+    incident_input_guardrail
+from aiops_incident_response_agent.tools.alert_tools import (
+    fetch_active_alerts, get_service_health_summary)
 
 TRIAGE_INSTRUCTIONS = """You are an expert SRE Triage Agent. Your role is to perform initial incident assessment.
 

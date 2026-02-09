@@ -5,15 +5,9 @@ events, community perspectives, open-source projects, and technical Q&A.
 """
 
 from agents import Agent, ModelSettings
-
-from deep_research_agent.tools.code_search_tools import (
-    github_search_repos,
-    stackexchange_search,
-)
-from deep_research_agent.tools.news_tools import (
-    google_news_rss,
-    reddit_search,
-)
+from deep_research_agent.tools.code_search_tools import (github_search_repos,
+                                                         stackexchange_search)
+from deep_research_agent.tools.news_tools import google_news_rss, reddit_search
 
 NEWS_RESEARCHER_INSTRUCTIONS = """You are the News & Community Researcher Agent. You search news, Reddit, GitHub, and StackExchange, then IMMEDIATELY hand off to the Content Extractor Agent. You NEVER produce a final answer yourself.
 

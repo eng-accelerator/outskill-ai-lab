@@ -12,27 +12,21 @@ Usage:
 import asyncio
 import logging
 
-from agents import (
-    AgentHooks,
-    AsyncOpenAI,
-    ModelSettings,
-    OpenAIChatCompletionsModel,
-    RunConfig,
-    Runner,
-    set_tracing_disabled,
-)
-
-from customer_support_agent.agents.billing_support import create_billing_support_agent
+from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
+                    OpenAIChatCompletionsModel, RunConfig, Runner,
+                    set_tracing_disabled)
+from customer_support_agent.agents.billing_support import \
+    create_billing_support_agent
 from customer_support_agent.agents.escalation import create_escalation_agent
-from customer_support_agent.agents.intake_router import create_intake_router_agent
-from customer_support_agent.agents.order_support import create_order_support_agent
+from customer_support_agent.agents.intake_router import \
+    create_intake_router_agent
+from customer_support_agent.agents.order_support import \
+    create_order_support_agent
 from customer_support_agent.agents.resolution import create_resolution_agent
-from customer_support_agent.agents.technical_support import create_technical_support_agent
+from customer_support_agent.agents.technical_support import \
+    create_technical_support_agent
 from customer_support_agent.simulators.scenario_engine import (
-    ScenarioType,
-    generate_scenario,
-    list_scenarios,
-)
+    ScenarioType, generate_scenario, list_scenarios)
 from customer_support_agent.utils.config import load_config
 
 logging.basicConfig(
@@ -133,7 +127,9 @@ def create_openrouter_model() -> OpenAIChatCompletionsModel:
         openai_client=client,
     )
 
-    logger.info("OpenRouter model configured: base_url=%s, model=%s", base_url, model_name)
+    logger.info(
+        "OpenRouter model configured: base_url=%s, model=%s", base_url, model_name
+    )
     return model
 
 
@@ -159,15 +155,25 @@ def build_agent_pipeline(model: OpenAIChatCompletionsModel, hooks: AgentHooks):
     escalation = create_escalation_agent(resolution, hooks=hooks)
     order_support = create_order_support_agent(escalation, resolution, hooks=hooks)
     billing_support = create_billing_support_agent(escalation, resolution, hooks=hooks)
-    technical_support = create_technical_support_agent(escalation, resolution, hooks=hooks)
+    technical_support = create_technical_support_agent(
+        escalation, resolution, hooks=hooks
+    )
     intake_router = create_intake_router_agent(
-        order_support, billing_support, technical_support, escalation, hooks=hooks,
+        order_support,
+        billing_support,
+        technical_support,
+        escalation,
+        hooks=hooks,
     )
 
     # Set model on all agents to use OpenRouter via Chat Completions
     all_agents = [
-        intake_router, order_support, billing_support,
-        technical_support, escalation, resolution,
+        intake_router,
+        order_support,
+        billing_support,
+        technical_support,
+        escalation,
+        resolution,
     ]
     for agent in all_agents:
         agent.model = model
@@ -225,10 +231,12 @@ async def run_customer_support(scenario_type: ScenarioType) -> str:
     # Generate scenario data
     print(f"\nGenerating scenario: {scenario_type}...")
     scenario_data = generate_scenario(scenario_type)
-    print(f"Generated: Customer={scenario_data.customer.name} ({scenario_data.customer.tier}), "
-          f"{len(scenario_data.orders)} orders, {len(scenario_data.returns)} returns, "
-          f"{len(scenario_data.subscriptions)} subscriptions, {len(scenario_data.invoices)} invoices, "
-          f"{len(scenario_data.knowledge_base)} KB articles")
+    print(
+        f"Generated: Customer={scenario_data.customer.name} ({scenario_data.customer.tier}), "
+        f"{len(scenario_data.orders)} orders, {len(scenario_data.returns)} returns, "
+        f"{len(scenario_data.subscriptions)} subscriptions, {len(scenario_data.invoices)} invoices, "
+        f"{len(scenario_data.knowledge_base)} KB articles"
+    )
 
     # Build agent pipeline
     intake_agent = build_agent_pipeline(model, hooks)

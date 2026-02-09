@@ -204,7 +204,10 @@ def generate_memory_leak_logs(base_time: datetime) -> list[LogEntry]:
                 level="WARN",
                 message=f"Memory usage at {mem_pct:.1f}% - approaching threshold",
                 trace_id=f"trace-{random.randint(10000, 99999)}",
-                metadata={"host": "order-service-pod-1", "heap_mb": str(int(mem_pct * 20))},
+                metadata={
+                    "host": "order-service-pod-1",
+                    "heap_mb": str(int(mem_pct * 20)),
+                },
             )
         )
 
@@ -312,11 +315,13 @@ def generate_deployment_regression_logs(base_time: datetime) -> list[LogEntry]:
                 timestamp=ts.isoformat(),
                 service=target_service,
                 level="ERROR",
-                message=random.choice([
-                    "NullPointerException in UserController.getProfile()",
-                    "Failed to process request: invalid auth token format",
-                    f"Timeout after {random.randint(5000, 15000)}ms waiting for response from database-proxy",
-                ]),
+                message=random.choice(
+                    [
+                        "NullPointerException in UserController.getProfile()",
+                        "Failed to process request: invalid auth token format",
+                        f"Timeout after {random.randint(5000, 15000)}ms waiting for response from database-proxy",
+                    ]
+                ),
                 trace_id=f"trace-{random.randint(10000, 99999)}",
                 metadata={
                     "host": f"user-service-pod-{random.randint(1, 3)}",

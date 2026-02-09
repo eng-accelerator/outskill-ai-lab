@@ -6,9 +6,10 @@ they are presented as final output.
 
 import logging
 
-from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
-
-from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
+from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
+                    RunContextWrapper)
+from aiops_incident_response_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,10 @@ async def validate_remediation_safety(
 
     for pattern in DANGEROUS_PATTERNS:
         if pattern in output_lower:
-            logger.warning("Remediation safety check FAILED: dangerous pattern '%s' detected", pattern)
+            logger.warning(
+                "Remediation safety check FAILED: dangerous pattern '%s' detected",
+                pattern,
+            )
             return GuardrailFunctionOutput(
                 output_info=f"Dangerous action detected: '{pattern}'. Remediation blocked for safety review.",
                 tripwire_triggered=True,

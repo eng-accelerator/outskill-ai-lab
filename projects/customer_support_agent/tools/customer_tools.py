@@ -9,32 +9,60 @@ import logging
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
 
 # Simple keyword-based sentiment indicators
 _NEGATIVE_INDICATORS = [
-    "frustrated", "angry", "disappointed", "terrible", "awful",
-    "unacceptable", "worst", "horrible", "furious", "disgusted",
-    "ridiculous", "outrageous", "scam", "rip off", "waste",
+    "frustrated",
+    "angry",
+    "disappointed",
+    "terrible",
+    "awful",
+    "unacceptable",
+    "worst",
+    "horrible",
+    "furious",
+    "disgusted",
+    "ridiculous",
+    "outrageous",
+    "scam",
+    "rip off",
+    "waste",
 ]
 
 _VERY_NEGATIVE_INDICATORS = [
-    "extremely frustrated", "absolutely furious", "cancelling everything",
-    "legal action", "lawsuit", "bbb complaint", "never again",
-    "demand", "immediately", "now",
+    "extremely frustrated",
+    "absolutely furious",
+    "cancelling everything",
+    "legal action",
+    "lawsuit",
+    "bbb complaint",
+    "never again",
+    "demand",
+    "immediately",
+    "now",
 ]
 
 _POSITIVE_INDICATORS = [
-    "thank", "appreciate", "great", "excellent", "wonderful",
-    "helpful", "amazing", "love", "fantastic", "pleased",
+    "thank",
+    "appreciate",
+    "great",
+    "excellent",
+    "wonderful",
+    "helpful",
+    "amazing",
+    "love",
+    "fantastic",
+    "pleased",
 ]
 
 
 @function_tool
-def fetch_customer_profile(ctx: RunContextWrapper[ScenarioData], customer_id: str) -> str:
+def fetch_customer_profile(
+    ctx: RunContextWrapper[ScenarioData], customer_id: str
+) -> str:
     """Fetch a customer profile from the CRM system.
 
     Retrieves the full customer profile including tier, spending history,

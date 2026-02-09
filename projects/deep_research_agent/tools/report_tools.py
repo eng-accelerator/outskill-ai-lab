@@ -9,7 +9,6 @@ import logging
 from datetime import datetime, timezone
 
 from agents import RunContextWrapper, function_tool
-
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)
@@ -52,11 +51,17 @@ def generate_citation(
         case "academic":
             citation = f"{author_str} {date_str}. {title}. Retrieved from {url}"
         case "news":
-            citation = f"{author_str} {date_str}. {title}. Retrieved {accessed}, from {url}"
+            citation = (
+                f"{author_str} {date_str}. {title}. Retrieved {accessed}, from {url}"
+            )
         case "wikipedia":
-            citation = f"{title}. (n.d.). In Wikipedia. Retrieved {accessed}, from {url}"
+            citation = (
+                f"{title}. (n.d.). In Wikipedia. Retrieved {accessed}, from {url}"
+            )
         case _:
-            citation = f"{author_str} {date_str}. {title}. Retrieved {accessed}, from {url}"
+            citation = (
+                f"{author_str} {date_str}. {title}. Retrieved {accessed}, from {url}"
+            )
 
     # Clean up extra spaces
     citation = " ".join(citation.split())
@@ -198,25 +203,45 @@ def generate_report_outline(
     sub_questions = json.loads(sub_questions_json)
 
     sections = [
-        {"title": "Executive Summary", "order": 1, "description": "High-level overview of findings and conclusions"},
+        {
+            "title": "Executive Summary",
+            "order": 1,
+            "description": "High-level overview of findings and conclusions",
+        },
     ]
 
     # Add a section for each sub-question group
     for i, sq in enumerate(sub_questions, 2):
         question = sq.get("question", f"Research Area {i}")
-        sections.append({
-            "title": question if len(question) < 60 else question[:57] + "...",
-            "order": i,
-            "description": f"Detailed findings for: {question}",
-        })
+        sections.append(
+            {
+                "title": question if len(question) < 60 else question[:57] + "...",
+                "order": i,
+                "description": f"Detailed findings for: {question}",
+            }
+        )
 
     # Add analysis and conclusion sections
     next_order = len(sections) + 1
-    sections.extend([
-        {"title": "Analysis & Cross-References", "order": next_order, "description": "Synthesis of findings, agreements, and conflicts across sources"},
-        {"title": "Confidence Assessment", "order": next_order + 1, "description": "Overall confidence score and methodology notes"},
-        {"title": "Conclusion", "order": next_order + 2, "description": "Final summary and key takeaways"},
-    ])
+    sections.extend(
+        [
+            {
+                "title": "Analysis & Cross-References",
+                "order": next_order,
+                "description": "Synthesis of findings, agreements, and conflicts across sources",
+            },
+            {
+                "title": "Confidence Assessment",
+                "order": next_order + 1,
+                "description": "Overall confidence score and methodology notes",
+            },
+            {
+                "title": "Conclusion",
+                "order": next_order + 2,
+                "description": "Final summary and key takeaways",
+            },
+        ]
+    )
 
     output = {
         "query": query,

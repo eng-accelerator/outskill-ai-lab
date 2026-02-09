@@ -10,7 +10,6 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 
 from agents import RunContextWrapper, function_tool
-
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
@@ -46,16 +45,24 @@ def get_billing_info(ctx: RunContextWrapper[ScenarioData], customer_id: str) -> 
         "payments": payments,
         "refunds": refunds,
         "summary": {
-            "active_subscriptions": len([s for s in subs if s.get("status") == "active"]),
+            "active_subscriptions": len(
+                [s for s in subs if s.get("status") == "active"]
+            ),
             "total_invoiced": sum(i.get("amount", 0) for i in invoices),
-            "total_paid": sum(p.get("amount", 0) for p in payments if p.get("status") == "completed"),
-            "pending_refunds": len([r for r in refunds if r.get("status") in ("pending", "processing")]),
+            "total_paid": sum(
+                p.get("amount", 0) for p in payments if p.get("status") == "completed"
+            ),
+            "pending_refunds": len(
+                [r for r in refunds if r.get("status") in ("pending", "processing")]
+            ),
         },
     }
 
     logger.info(
         "Billing info: %d subs, %d invoices, %d payments",
-        len(subs), len(invoices), len(payments),
+        len(subs),
+        len(invoices),
+        len(payments),
     )
     return json.dumps(result, indent=2)
 
@@ -82,7 +89,12 @@ def process_refund(
         str: JSON string with refund confirmation or error.
     """
     scenario = ctx.context
-    logger.info("Processing refund: payment=%s, amount=%.2f, reason=%s", payment_id, amount, reason)
+    logger.info(
+        "Processing refund: payment=%s, amount=%.2f, reason=%s",
+        payment_id,
+        amount,
+        reason,
+    )
 
     # Find the payment
     target_payment = None
@@ -95,18 +107,24 @@ def process_refund(
         return json.dumps({"error": f"Payment {payment_id} not found"})
 
     if target_payment.status == "refunded":
-        return json.dumps({
-            "error": f"Payment {payment_id} has already been refunded",
-        })
+        return json.dumps(
+            {
+                "error": f"Payment {payment_id} has already been refunded",
+            }
+        )
 
     if amount > target_payment.amount:
-        return json.dumps({
-            "error": f"Refund amount ${amount:.2f} exceeds payment amount ${target_payment.amount:.2f}",
-        })
+        return json.dumps(
+            {
+                "error": f"Refund amount ${amount:.2f} exceeds payment amount ${target_payment.amount:.2f}",
+            }
+        )
 
     requires_approval = amount > 500.0
 
-    refund_id = f"REF-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M')}-{payment_id[-4:]}"
+    refund_id = (
+        f"REF-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M')}-{payment_id[-4:]}"
+    )
     result = {
         "refund_id": refund_id,
         "payment_id": payment_id,
@@ -121,7 +139,12 @@ def process_refund(
         ),
     }
 
-    logger.info("Refund %s created: amount=%.2f, requires_approval=%s", refund_id, amount, requires_approval)
+    logger.info(
+        "Refund %s created: amount=%.2f, requires_approval=%s",
+        refund_id,
+        amount,
+        requires_approval,
+    )
     return json.dumps(result, indent=2)
 
 
@@ -147,12 +170,19 @@ def update_subscription(
     scenario = ctx.context
     logger.info("Updating subscription for %s to plan: %s", customer_id, new_plan)
 
-    valid_plans = {"free": 0.00, "starter": 9.99, "professional": 29.99, "enterprise": 99.99}
+    valid_plans = {
+        "free": 0.00,
+        "starter": 9.99,
+        "professional": 29.99,
+        "enterprise": 99.99,
+    }
 
     if new_plan not in valid_plans:
-        return json.dumps({
-            "error": f"Invalid plan: {new_plan}. Valid plans: {', '.join(valid_plans.keys())}",
-        })
+        return json.dumps(
+            {
+                "error": f"Invalid plan: {new_plan}. Valid plans: {', '.join(valid_plans.keys())}",
+            }
+        )
 
     # Find current subscription
     current_sub = None
@@ -162,12 +192,16 @@ def update_subscription(
             break
 
     if current_sub is None:
-        return json.dumps({"error": f"No active subscription found for customer {customer_id}"})
+        return json.dumps(
+            {"error": f"No active subscription found for customer {customer_id}"}
+        )
 
     if current_sub.plan == new_plan:
-        return json.dumps({
-            "message": f"Customer is already on the {new_plan} plan. No change needed.",
-        })
+        return json.dumps(
+            {
+                "message": f"Customer is already on the {new_plan} plan. No change needed.",
+            }
+        )
 
     current_price = valid_plans.get(current_sub.plan, 0)
     new_price = valid_plans[new_plan]
@@ -191,7 +225,9 @@ def update_subscription(
 
     logger.info(
         "Subscription updated: %s -> %s for customer %s",
-        current_sub.plan, new_plan, customer_id,
+        current_sub.plan,
+        new_plan,
+        customer_id,
     )
     return json.dumps(result, indent=2)
 

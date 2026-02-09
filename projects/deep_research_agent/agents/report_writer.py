@@ -6,15 +6,13 @@ report with bibliography and confidence assessment.
 """
 
 from agents import Agent, ModelSettings
-
-from deep_research_agent.guardrails.output_quality import report_quality_guardrail
+from deep_research_agent.guardrails.output_quality import \
+    report_quality_guardrail
 from deep_research_agent.tools.analysis_tools import calculate_confidence_score
-from deep_research_agent.tools.report_tools import (
-    compile_bibliography,
-    format_report_section,
-    generate_citation,
-    generate_report_outline,
-)
+from deep_research_agent.tools.report_tools import (compile_bibliography,
+                                                    format_report_section,
+                                                    generate_citation,
+                                                    generate_report_outline)
 
 REPORT_WRITER_INSTRUCTIONS = """You are an expert Research Report Writer Agent. Your role is to compile all research findings into a comprehensive, well-structured report.
 

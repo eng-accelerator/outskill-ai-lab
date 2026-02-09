@@ -7,7 +7,8 @@ and return histories for various customer support scenarios.
 import logging
 from datetime import datetime, timedelta, timezone
 
-from customer_support_agent.models.orders import Order, OrderItem, Return, Shipment
+from customer_support_agent.models.orders import (Order, OrderItem, Return,
+                                                  Shipment)
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,9 @@ def _iso(dt: datetime) -> str:
     return dt.isoformat()
 
 
-def generate_delayed_order_data(base_time: datetime) -> tuple[list[Order], list[Return]]:
+def generate_delayed_order_data(
+    base_time: datetime,
+) -> tuple[list[Order], list[Return]]:
     """Generate order data for the delayed_order scenario.
 
     Creates an order that's been stuck in 'shipped' status with no tracking
@@ -87,7 +90,9 @@ def generate_delayed_order_data(base_time: datetime) -> tuple[list[Order], list[
     return orders, []
 
 
-def generate_refund_request_data(base_time: datetime) -> tuple[list[Order], list[Return]]:
+def generate_refund_request_data(
+    base_time: datetime,
+) -> tuple[list[Order], list[Return]]:
     """Generate order data for the refund_request scenario.
 
     Creates an order with a defective product that was delivered,
@@ -137,11 +142,17 @@ def generate_refund_request_data(base_time: datetime) -> tuple[list[Order], list
         ),
     ]
 
-    logger.info("Generated %d orders, %d returns for refund_request scenario", len(orders), len(returns))
+    logger.info(
+        "Generated %d orders, %d returns for refund_request scenario",
+        len(orders),
+        len(returns),
+    )
     return orders, returns
 
 
-def generate_billing_dispute_data(base_time: datetime) -> tuple[list[Order], list[Return]]:
+def generate_billing_dispute_data(
+    base_time: datetime,
+) -> tuple[list[Order], list[Return]]:
     """Generate order data for the billing_dispute scenario.
 
     Creates minimal order data since this scenario focuses on billing.
@@ -172,7 +183,9 @@ def generate_billing_dispute_data(base_time: datetime) -> tuple[list[Order], lis
     return orders, []
 
 
-def generate_technical_issue_data(base_time: datetime) -> tuple[list[Order], list[Return]]:
+def generate_technical_issue_data(
+    base_time: datetime,
+) -> tuple[list[Order], list[Return]]:
     """Generate order data for the technical_issue scenario.
 
     Creates order data showing recent product purchases relevant to the tech issue.
@@ -205,7 +218,9 @@ def generate_technical_issue_data(base_time: datetime) -> tuple[list[Order], lis
     return orders, []
 
 
-def generate_complex_escalation_data(base_time: datetime) -> tuple[list[Order], list[Return]]:
+def generate_complex_escalation_data(
+    base_time: datetime,
+) -> tuple[list[Order], list[Return]]:
     """Generate order data for the complex_escalation scenario.
 
     Creates multiple orders with issues: wrong item shipped, plus recent purchases.
@@ -275,5 +290,9 @@ def generate_complex_escalation_data(base_time: datetime) -> tuple[list[Order], 
         ),
     ]
 
-    logger.info("Generated %d orders, %d returns for complex_escalation scenario", len(orders), len(returns))
+    logger.info(
+        "Generated %d orders, %d returns for complex_escalation scenario",
+        len(orders),
+        len(returns),
+    )
     return orders, returns

@@ -12,27 +12,23 @@ Usage:
 import asyncio
 import logging
 
-from agents import (
-    AgentHooks,
-    AsyncOpenAI,
-    ModelSettings,
-    OpenAIChatCompletionsModel,
-    RunConfig,
-    Runner,
-    set_tracing_disabled,
-)
-
-from cybersecurity_threat_detection_agent.agents.alert_intake import create_alert_intake_agent
-from cybersecurity_threat_detection_agent.agents.auth_analyzer import create_auth_analyzer_agent
-from cybersecurity_threat_detection_agent.agents.containment import create_containment_agent
-from cybersecurity_threat_detection_agent.agents.network_analyzer import create_network_analyzer_agent
-from cybersecurity_threat_detection_agent.agents.soc_reporter import create_soc_reporter_agent
-from cybersecurity_threat_detection_agent.agents.threat_intel import create_threat_intel_agent
+from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
+                    OpenAIChatCompletionsModel, RunConfig, Runner,
+                    set_tracing_disabled)
+from cybersecurity_threat_detection_agent.agents.alert_intake import \
+    create_alert_intake_agent
+from cybersecurity_threat_detection_agent.agents.auth_analyzer import \
+    create_auth_analyzer_agent
+from cybersecurity_threat_detection_agent.agents.containment import \
+    create_containment_agent
+from cybersecurity_threat_detection_agent.agents.network_analyzer import \
+    create_network_analyzer_agent
+from cybersecurity_threat_detection_agent.agents.soc_reporter import \
+    create_soc_reporter_agent
+from cybersecurity_threat_detection_agent.agents.threat_intel import \
+    create_threat_intel_agent
 from cybersecurity_threat_detection_agent.simulators.scenario_engine import (
-    ScenarioType,
-    generate_scenario,
-    list_scenarios,
-)
+    ScenarioType, generate_scenario, list_scenarios)
 from cybersecurity_threat_detection_agent.utils.config import load_config
 
 logging.basicConfig(
@@ -133,7 +129,9 @@ def create_openrouter_model() -> OpenAIChatCompletionsModel:
         openai_client=client,
     )
 
-    logger.info("OpenRouter model configured: base_url=%s, model=%s", base_url, model_name)
+    logger.info(
+        "OpenRouter model configured: base_url=%s, model=%s", base_url, model_name
+    )
     return model
 
 
@@ -155,13 +153,24 @@ def build_agent_pipeline(model: OpenAIChatCompletionsModel, hooks: AgentHooks):
     threat_intel = create_threat_intel_agent(containment, hooks=hooks)
     auth_analyzer = create_auth_analyzer_agent(threat_intel, hooks=hooks)
     network_analyzer = create_network_analyzer_agent(threat_intel, hooks=hooks)
-    alert_intake = create_alert_intake_agent(auth_analyzer, network_analyzer, hooks=hooks)
+    alert_intake = create_alert_intake_agent(
+        auth_analyzer, network_analyzer, hooks=hooks
+    )
 
     # Set model on all agents to use OpenRouter via Chat Completions
-    for agent in [alert_intake, auth_analyzer, network_analyzer, threat_intel, containment, soc_reporter]:
+    for agent in [
+        alert_intake,
+        auth_analyzer,
+        network_analyzer,
+        threat_intel,
+        containment,
+        soc_reporter,
+    ]:
         agent.model = model
 
-    logger.info("Agent pipeline built: Alert Intake -> [Auth/Network Analyzer] -> Threat Intel -> Containment -> SOC Reporter")
+    logger.info(
+        "Agent pipeline built: Alert Intake -> [Auth/Network Analyzer] -> Threat Intel -> Containment -> SOC Reporter"
+    )
     return alert_intake
 
 
@@ -212,12 +221,14 @@ async def run_threat_detection(scenario_type: ScenarioType) -> str:
     # Generate scenario data
     print(f"\nGenerating scenario: {scenario_type}...")
     scenario_data = generate_scenario(scenario_type)
-    print(f"Generated: {len(scenario_data.auth_logs)} auth logs, "
-          f"{len(scenario_data.network_logs)} network logs, "
-          f"{len(scenario_data.api_access_logs)} API logs, "
-          f"{len(scenario_data.endpoint_events)} endpoint events, "
-          f"{len(scenario_data.cloud_audit_logs)} cloud audit entries, "
-          f"{len(scenario_data.alerts)} alerts")
+    print(
+        f"Generated: {len(scenario_data.auth_logs)} auth logs, "
+        f"{len(scenario_data.network_logs)} network logs, "
+        f"{len(scenario_data.api_access_logs)} API logs, "
+        f"{len(scenario_data.endpoint_events)} endpoint events, "
+        f"{len(scenario_data.cloud_audit_logs)} cloud audit entries, "
+        f"{len(scenario_data.alerts)} alerts"
+    )
 
     # Build agent pipeline
     alert_intake_agent = build_agent_pipeline(model, hooks)

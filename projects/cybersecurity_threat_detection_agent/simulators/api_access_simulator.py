@@ -239,11 +239,13 @@ def generate_cloud_misconfig_api_logs(base_time: datetime) -> list[APIAccessEntr
                 status_code=200,
                 response_time_ms=random.randint(500, 3000),
                 source_ip=random.choice(external_ips),
-                user_agent=random.choice([
-                    "curl/8.4.0",
-                    "python-requests/2.31.0",
-                    "Scrapy/2.11",
-                ]),
+                user_agent=random.choice(
+                    [
+                        "curl/8.4.0",
+                        "python-requests/2.31.0",
+                        "Scrapy/2.11",
+                    ]
+                ),
             )
         )
 

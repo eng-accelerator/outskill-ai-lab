@@ -6,9 +6,10 @@ accidentally lock out the SOC team or disrupt critical infrastructure.
 
 import logging
 
-from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
-
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
+from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
+                    RunContextWrapper)
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
+    ScenarioData
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +59,10 @@ async def validate_containment_safety(
     # Check for dangerous patterns
     for pattern in DANGEROUS_PATTERNS:
         if pattern in output_lower:
-            logger.warning("Containment safety check FAILED: dangerous pattern '%s' detected", pattern)
+            logger.warning(
+                "Containment safety check FAILED: dangerous pattern '%s' detected",
+                pattern,
+            )
             return GuardrailFunctionOutput(
                 output_info=f"Dangerous containment action detected: '{pattern}'. Action blocked for safety review.",
                 tripwire_triggered=True,
@@ -67,7 +71,10 @@ async def validate_containment_safety(
     # Check for SOC team account targeting
     for account in SOC_TEAM_ACCOUNTS:
         if account in output_lower and "disable" in output_lower:
-            logger.warning("Containment safety check FAILED: attempt to disable SOC team account '%s'", account)
+            logger.warning(
+                "Containment safety check FAILED: attempt to disable SOC team account '%s'",
+                account,
+            )
             return GuardrailFunctionOutput(
                 output_info=f"Cannot disable SOC team account '{account}'. This would lock out the security team.",
                 tripwire_triggered=True,
