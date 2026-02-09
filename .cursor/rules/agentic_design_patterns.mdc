@@ -1,0 +1,291 @@
+---
+description: "Core agentic design rules distilled from Agentic Design Patterns for building robust AI agents"
+alwaysApply: false
+---
+# Agentic Design Patterns – Cursor Rules
+
+These rules guide the Cursor Agent when **designing, implementing, or refactoring AI agent projects**. They are distilled from *Agentic Design Patterns* (Antonio Gulli) and optimized for practical engineering use.
+
+The goal is not to recreate the book, but to **enforce correct architectural decisions** when building agentic systems.
+
+---
+
+## 1. What Qualifies as an Agent
+
+An AI system MUST be treated as an *agent* only if it:
+
+- Has an explicit **goal or mission**
+- Can **plan multi-step actions**
+- Can **use tools / external systems**
+- Maintains **state or memory across steps**
+- Can **observe outcomes and adapt**
+
+If these properties are missing, do **not** over-engineer with agent abstractions.
+
+---
+
+## 2. Default Agent Loop (Mandatory)
+
+Every agent implementation MUST follow this conceptual loop:
+
+1. **Goal intake** – clarify objective and success criteria
+2. **Context gathering** – retrieve state, memory, environment signals
+3. **Planning** – generate or update an execution plan
+4. **Action execution** – tool calls, messages, API interactions
+5. **Reflection / learning** – evaluate outcome, update memory
+
+If the loop is implicit, document where each step occurs.
+
+---
+
+## 3. Prompt Chaining Pattern
+
+Use prompt chaining when:
+- Tasks require **sequential reasoning**
+- Output of one step feeds the next
+
+Rules:
+- Each prompt has **one responsibility**
+- Intermediate outputs MUST be structured (JSON / typed schema)
+- Do not chain more than necessary; prefer 3–5 steps
+
+Avoid:
+- Monolithic prompts doing planning + execution + evaluation
+
+---
+
+## 4. Routing Pattern
+
+Use routing when:
+- Multiple strategies, tools, or agents are possible
+
+Rules:
+- Routing decision MUST be explicit and inspectable
+- Prefer rule-based routing first, LLM-based routing second
+- Log routing decisions for observability
+
+Never:
+- Hide routing logic inside a long prompt
+
+---
+
+## 5. Parallelization Pattern
+
+Use parallel execution when:
+- Tasks are independent
+- Latency matters
+
+Rules:
+- Fan-out → work → fan-in
+- Merge results deterministically
+- Handle partial failures explicitly
+
+Avoid parallelism for tasks with hidden dependencies.
+
+---
+
+## 6. Reflection Pattern
+
+Reflection is mandatory for:
+- Long-running agents
+- Code generation agents
+- Autonomous decision-making
+
+Rules:
+- Reflection evaluates output vs goal
+- Reflection can revise the plan or retry actions
+- Keep reflection prompts short and diagnostic
+
+Do NOT expose internal chain-of-thought verbatim.
+
+---
+
+## 7. Tool Use Pattern
+
+Agents MUST treat tools as first-class capabilities.
+
+Rules:
+- Every tool has:
+  - Clear description
+  - Strict input/output schema
+- Validate tool outputs before reuse
+- Tool failures must be recoverable
+
+Never:
+- Allow free-form tool invocation without schema
+
+---
+
+## 8. Planning Pattern
+
+Planning separates *thinking* from *doing*.
+
+Rules:
+- Generate plans explicitly (steps, dependencies)
+- Plans are revisable artifacts
+- Execution follows the plan unless reflection intervenes
+
+Avoid:
+- Re-planning on every token unless necessary
+
+---
+
+## 9. Multi-Agent Pattern
+
+Use multiple agents ONLY when:
+- Roles are clearly separable
+- Parallel reasoning or specialization adds value
+
+Rules:
+- Each agent has a single responsibility
+- Communication contracts must be defined
+- Avoid circular dependencies
+
+Prefer fewer, stronger agents over many weak ones.
+
+---
+
+## 10. Memory Management Pattern
+
+Memory is not logging.
+
+Rules:
+- Separate:
+  - Short-term context (session)
+  - Long-term memory (retrieval)
+- Write to memory intentionally
+- Read memory selectively
+
+Avoid:
+- Dumping full conversation history into context
+
+---
+
+## 11. Learning & Adaptation Pattern
+
+Agents MAY adapt behavior over time.
+
+Rules:
+- Learning signals must be explicit
+- Never silently change core behavior
+- Version learned policies or prompts
+
+---
+
+## 12. Goal Setting & Monitoring
+
+Rules:
+- Goals must be measurable
+- Track progress against goals
+- Detect stagnation or loops
+
+If progress stalls → trigger reflection or human review.
+
+---
+
+## 13. Exception Handling & Recovery
+
+Failure is expected.
+
+Rules:
+- Categorize failures (tool, reasoning, data)
+- Retry only when failure mode is understood
+- Escalate to human-in-the-loop when uncertain
+
+Never:
+- Infinite retries
+
+---
+
+## 14. Human-in-the-Loop Pattern
+
+Humans are collaborators, not fallbacks.
+
+Rules:
+- Define when human input is required
+- Ask precise, minimal questions
+- Resume agent loop after intervention
+
+---
+
+## 15. Knowledge Retrieval (RAG)
+
+Use RAG when:
+- Knowledge is external or dynamic
+
+Rules:
+- Retrieval before generation
+- Cite sources internally
+- Validate relevance before use
+
+Avoid:
+- Over-retrieving context
+
+---
+
+## 16. Inter-Agent Communication (A2A)
+
+Rules:
+- Messages must be structured
+- Avoid free-form chat between agents
+- Log all agent-to-agent exchanges
+
+---
+
+## 17. Resource-Aware Optimization
+
+Rules:
+- Be cost- and latency-aware
+- Prefer smaller models for routing and evaluation
+- Escalate to larger models only when needed
+
+---
+
+## 18. Reasoning Techniques
+
+Rules:
+- Use explicit reasoning steps internally
+- Summarize reasoning into decisions
+- Do not expose raw reasoning unless required
+
+---
+
+## 19. Guardrails & Safety
+
+Rules:
+- Validate inputs and outputs
+- Apply domain-specific constraints
+- Prevent unsafe tool actions
+
+Safety is architectural, not prompt-only.
+
+---
+
+## 20. Evaluation & Monitoring
+
+Rules:
+- Define success metrics early
+- Log decisions, plans, and outcomes
+- Continuously evaluate agent behavior
+
+---
+
+## 21. Prioritization & Exploration
+
+Rules:
+- Prioritize tasks based on goal impact
+- Allow controlled exploration
+- Bound exploration with budgets
+
+---
+
+## Final Rule
+
+If an agent design feels *magical*, it is probably wrong.
+
+Prefer:
+- Explicit state
+- Explicit plans
+- Explicit decisions
+
+Agentic systems should be **inspectable, debuggable, and correct by design**.

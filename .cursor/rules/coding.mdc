@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+<core_principles>
+* Embrace "functional core; imperative shell" - use FP patterns (similar to OCaml/Rust) for internal implementations; keep public-facing APIs straightforward. No defunctionalized HKTs or Okasaki 1998.
+
+* Code duplication is often better than the wrong abstraction.
+
+* Be judicious with comments - avoid documenting the obvious, but preserve comments that explain the complex.
+
+* Always add docstrings that includes argument types, return types and what exceptions are raised.
+
+* Liberally use logging to allow for high observability.
+
+* For concurrent code, following Rob Pike's go proverbs is valuable; yet complexity is the enemy. Simple locks are fine.
+
+* Always strongly prefer errors-as-types / errors-as-return-values over try-except. Nested try-except blocks are always prohibited.
+
+* Always prefer composition over inheritance.
+
+* Prefer early returns and sensible defaults over if-else statements.
+
+* Prefer match-case over if-elif-else statements.
+
+* Strongly prefer liberal use of asserts to affirm world-view/ state is as expected. Failing early is desired.
+
+* Always strongly prefer global import statements.
+
+</core_principles>
+
+<trivia>
+* In logging, AVOID using f-strings. ALWAYS either do structured logging, or delegate string formatting to the logger.
+</trivia>
+
+<type_system_and_architecture>
+* Use modern Python type annotations (Python 3.10+) - prefer `list[int]` over `List[int]`, etc.
+
+* Prefer Python Literals over String Enumerations.
+
+* Re: the algebra of types. 
+   - (Semiring) products are `@dataclass` (preferably frozen)
+   - Sums are `|`. 
+   - Use `match` for elimination (where a simple `isinstance` won't suffice).
+   - "Initial object"/bottom type is `typing.Never`.
+   - Pragmatism: translate `data Foo = Bar | Baz` to either literal types or enums depending on the usage.
+
+* Use protocols and traits (via Protocol classes or abstract base classes) to decouple and for type lambdas.
+</type_system_and_architecture>
