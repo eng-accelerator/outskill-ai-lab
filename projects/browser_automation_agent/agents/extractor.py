@@ -6,8 +6,10 @@ Hands off to the Validator for result verification.
 """
 
 from agents import Agent, ModelSettings
-from browser_automation_agent.tools.extraction_tools import (extract_page_data,
-                                                              extract_text)
+from browser_automation_agent.tools.extraction_tools import (
+    extract_page_data,
+    extract_text,
+)
 
 EXTRACTOR_INSTRUCTIONS = """You are the Extractor Agent. You extract structured data from the current web page, then IMMEDIATELY hand off to the Validator Agent.
 

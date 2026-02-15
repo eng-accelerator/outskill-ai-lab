@@ -12,21 +12,24 @@ Usage:
 import asyncio
 import logging
 
-from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
-                    OpenAIChatCompletionsModel, RunConfig, Runner,
-                    set_tracing_disabled)
-from deep_research_agent.agents.academic_researcher import \
-    create_academic_researcher_agent
-from deep_research_agent.agents.content_extractor import \
-    create_content_extractor_agent
-from deep_research_agent.agents.news_researcher import \
-    create_news_researcher_agent
+from agents import (
+    AgentHooks,
+    AsyncOpenAI,
+    ModelSettings,
+    OpenAIChatCompletionsModel,
+    RunConfig,
+    Runner,
+    set_tracing_disabled,
+)
+from deep_research_agent.agents.academic_researcher import (
+    create_academic_researcher_agent,
+)
+from deep_research_agent.agents.content_extractor import create_content_extractor_agent
+from deep_research_agent.agents.news_researcher import create_news_researcher_agent
 from deep_research_agent.agents.report_writer import create_report_writer_agent
-from deep_research_agent.agents.research_planner import \
-    create_research_planner_agent
+from deep_research_agent.agents.research_planner import create_research_planner_agent
 from deep_research_agent.agents.synthesizer import create_synthesizer_agent
-from deep_research_agent.agents.web_researcher import \
-    create_web_researcher_agent
+from deep_research_agent.agents.web_researcher import create_web_researcher_agent
 from deep_research_agent.models.research import ResearchContext
 from deep_research_agent.utils.config import load_config
 

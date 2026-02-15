@@ -44,12 +44,14 @@ async def observe_page(
 
     actions = []
     for result in response.data.result:
-        actions.append({
-            "description": result.description,
-            "selector": result.selector,
-            "method": result.method,
-            "arguments": result.arguments,
-        })
+        actions.append(
+            {
+                "description": result.description,
+                "selector": result.selector,
+                "method": result.method,
+                "arguments": result.arguments,
+            }
+        )
 
     # Record observation in context
     raw = json.dumps(actions, indent=2)

@@ -6,8 +6,9 @@ a structured plan, and routes to the Navigator agent.
 """
 
 from agents import Agent, ModelSettings
-from browser_automation_agent.guardrails.input_validation import \
-    automation_input_guardrail
+from browser_automation_agent.guardrails.input_validation import (
+    automation_input_guardrail,
+)
 
 TASK_PLANNER_INSTRUCTIONS = """You are the Task Planner Agent. You analyze the user's browser automation task, create a plan, and IMMEDIATELY hand off to the Navigator Agent.
 

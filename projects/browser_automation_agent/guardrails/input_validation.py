@@ -6,8 +6,7 @@ is properly initialized before the agent pipeline processes it.
 
 import logging
 
-from agents import (Agent, GuardrailFunctionOutput, InputGuardrail,
-                    RunContextWrapper)
+from agents import Agent, GuardrailFunctionOutput, InputGuardrail, RunContextWrapper
 from browser_automation_agent.models.task import BrowserContext
 
 logger = logging.getLogger(__name__)

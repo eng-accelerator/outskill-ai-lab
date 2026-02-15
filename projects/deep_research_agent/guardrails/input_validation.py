@@ -6,8 +6,7 @@ the agent pipeline processes it.
 
 import logging
 
-from agents import (Agent, GuardrailFunctionOutput, InputGuardrail,
-                    RunContextWrapper)
+from agents import Agent, GuardrailFunctionOutput, InputGuardrail, RunContextWrapper
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)

@@ -6,7 +6,10 @@ to enrich analysis findings and compute a final threat score.
 
 from agents import Agent, ModelSettings
 from cybersecurity_threat_detection_agent.tools.threat_intel_tools import (
-    get_threat_reputation, lookup_ioc, map_mitre_attack)
+    get_threat_reputation,
+    lookup_ioc,
+    map_mitre_attack,
+)
 
 THREAT_INTEL_INSTRUCTIONS = """You are an expert Threat Intelligence Agent. Your role is to enrich security findings with threat intelligence data and compute a threat score.
 

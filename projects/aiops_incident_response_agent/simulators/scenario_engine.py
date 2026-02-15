@@ -9,31 +9,46 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Literal
 
-from aiops_incident_response_agent.models.analysis import (Deployment,
-                                                           LogEntry,
-                                                           MetricDataPoint,
-                                                           TraceSpan)
+from aiops_incident_response_agent.models.analysis import (
+    Deployment,
+    LogEntry,
+    MetricDataPoint,
+    TraceSpan,
+)
 from aiops_incident_response_agent.models.incident import Alert, ServiceHealth
 from aiops_incident_response_agent.simulators.alert_simulator import (
-    generate_cpu_spike_alerts, generate_database_exhaustion_alerts,
-    generate_deployment_regression_alerts, generate_memory_leak_alerts,
-    generate_network_partition_alerts)
+    generate_cpu_spike_alerts,
+    generate_database_exhaustion_alerts,
+    generate_deployment_regression_alerts,
+    generate_memory_leak_alerts,
+    generate_network_partition_alerts,
+)
 from aiops_incident_response_agent.simulators.log_simulator import (
-    generate_cpu_spike_logs, generate_database_exhaustion_logs,
-    generate_deployment_regression_logs, generate_memory_leak_logs,
-    generate_network_partition_logs)
+    generate_cpu_spike_logs,
+    generate_database_exhaustion_logs,
+    generate_deployment_regression_logs,
+    generate_memory_leak_logs,
+    generate_network_partition_logs,
+)
 from aiops_incident_response_agent.simulators.metrics_simulator import (
-    generate_cpu_spike_metrics, generate_database_exhaustion_metrics,
-    generate_deployment_regression_metrics, generate_memory_leak_metrics,
-    generate_network_partition_metrics)
+    generate_cpu_spike_metrics,
+    generate_database_exhaustion_metrics,
+    generate_deployment_regression_metrics,
+    generate_memory_leak_metrics,
+    generate_network_partition_metrics,
+)
 from aiops_incident_response_agent.simulators.trace_simulator import (
-    generate_cpu_spike_deployments, generate_cpu_spike_traces,
+    generate_cpu_spike_deployments,
+    generate_cpu_spike_traces,
     generate_database_exhaustion_deployments,
     generate_database_exhaustion_traces,
     generate_deployment_regression_deployments,
-    generate_deployment_regression_traces, generate_memory_leak_deployments,
-    generate_memory_leak_traces, generate_network_partition_deployments,
-    generate_network_partition_traces)
+    generate_deployment_regression_traces,
+    generate_memory_leak_deployments,
+    generate_memory_leak_traces,
+    generate_network_partition_deployments,
+    generate_network_partition_traces,
+)
 
 logger = logging.getLogger(__name__)
 

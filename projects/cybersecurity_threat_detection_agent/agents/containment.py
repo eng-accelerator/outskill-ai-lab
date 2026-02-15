@@ -5,11 +5,15 @@ containment actions, then hands off to the SOC reporter.
 """
 
 from agents import Agent, ModelSettings
-from cybersecurity_threat_detection_agent.guardrails.containment_safety import \
-    containment_output_guardrail
+from cybersecurity_threat_detection_agent.guardrails.containment_safety import (
+    containment_output_guardrail,
+)
 from cybersecurity_threat_detection_agent.tools.containment_tools import (
-    propose_account_disable, propose_api_key_revoke, propose_host_isolation,
-    propose_ip_block)
+    propose_account_disable,
+    propose_api_key_revoke,
+    propose_host_isolation,
+    propose_ip_block,
+)
 
 CONTAINMENT_INSTRUCTIONS = """You are an expert Containment Agent. Your role is to propose safe, effective containment actions for detected threats.
 

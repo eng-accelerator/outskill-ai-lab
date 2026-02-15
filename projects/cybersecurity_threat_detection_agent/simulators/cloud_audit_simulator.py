@@ -7,8 +7,7 @@ S3 bucket policy changes, security group modifications, and credential anomalies
 import random
 from datetime import datetime, timedelta
 
-from cybersecurity_threat_detection_agent.models.analysis import \
-    CloudAuditEntry
+from cybersecurity_threat_detection_agent.models.analysis import CloudAuditEntry
 
 # Normal cloud principals
 CLOUD_PRINCIPALS = [

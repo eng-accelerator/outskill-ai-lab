@@ -6,8 +6,7 @@ before the agent pipeline processes it.
 
 import logging
 
-from agents import (Agent, GuardrailFunctionOutput, InputGuardrail,
-                    RunContextWrapper)
+from agents import Agent, GuardrailFunctionOutput, InputGuardrail, RunContextWrapper
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)

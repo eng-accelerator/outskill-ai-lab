@@ -12,21 +12,28 @@ Usage:
 import asyncio
 import logging
 
-from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
-                    OpenAIChatCompletionsModel, RunConfig, Runner,
-                    set_tracing_disabled)
-from customer_support_agent.agents.billing_support import \
-    create_billing_support_agent
+from agents import (
+    AgentHooks,
+    AsyncOpenAI,
+    ModelSettings,
+    OpenAIChatCompletionsModel,
+    RunConfig,
+    Runner,
+    set_tracing_disabled,
+)
+from customer_support_agent.agents.billing_support import create_billing_support_agent
 from customer_support_agent.agents.escalation import create_escalation_agent
-from customer_support_agent.agents.intake_router import \
-    create_intake_router_agent
-from customer_support_agent.agents.order_support import \
-    create_order_support_agent
+from customer_support_agent.agents.intake_router import create_intake_router_agent
+from customer_support_agent.agents.order_support import create_order_support_agent
 from customer_support_agent.agents.resolution import create_resolution_agent
-from customer_support_agent.agents.technical_support import \
-    create_technical_support_agent
+from customer_support_agent.agents.technical_support import (
+    create_technical_support_agent,
+)
 from customer_support_agent.simulators.scenario_engine import (
-    ScenarioType, generate_scenario, list_scenarios)
+    ScenarioType,
+    generate_scenario,
+    list_scenarios,
+)
 from customer_support_agent.utils.config import load_config
 
 logging.basicConfig(

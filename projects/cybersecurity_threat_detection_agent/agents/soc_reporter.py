@@ -7,7 +7,9 @@ and containment actions. This is the terminal agent in the pipeline.
 
 from agents import Agent, ModelSettings
 from cybersecurity_threat_detection_agent.tools.reporting_tools import (
-    format_soc_report, generate_threat_timeline)
+    format_soc_report,
+    generate_threat_timeline,
+)
 
 SOC_REPORTER_INSTRUCTIONS = """You are an expert SOC Report Agent. Your role is to produce a clear, comprehensive SOC incident report.
 

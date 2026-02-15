@@ -7,8 +7,7 @@ and return histories for various customer support scenarios.
 import logging
 from datetime import datetime, timedelta, timezone
 
-from customer_support_agent.models.orders import (Order, OrderItem, Return,
-                                                  Shipment)
+from customer_support_agent.models.orders import Order, OrderItem, Return, Shipment
 
 logger = logging.getLogger(__name__)
 

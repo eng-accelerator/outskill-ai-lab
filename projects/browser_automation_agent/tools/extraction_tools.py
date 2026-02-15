@@ -47,7 +47,11 @@ async def extract_page_data(
     response = await session.extract(instruction=instruction, schema=schema)
 
     extracted_data = response.data.result
-    data_str = json.dumps(extracted_data, indent=2) if not isinstance(extracted_data, str) else extracted_data
+    data_str = (
+        json.dumps(extracted_data, indent=2)
+        if not isinstance(extracted_data, str)
+        else extracted_data
+    )
 
     # Record extraction in context
     extraction = ExtractionResult(
@@ -66,7 +70,9 @@ async def extract_page_data(
         "extracted_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info("Extraction complete: instruction=%s, success=%s", instruction, response.success)
+    logger.info(
+        "Extraction complete: instruction=%s, success=%s", instruction, response.success
+    )
     return json.dumps(output, indent=2)
 
 
@@ -105,7 +111,11 @@ async def extract_text(
     response = await session.extract(instruction=instruction, schema=simple_schema)
 
     extracted_data = response.data.result
-    data_str = json.dumps(extracted_data, indent=2) if not isinstance(extracted_data, str) else extracted_data
+    data_str = (
+        json.dumps(extracted_data, indent=2)
+        if not isinstance(extracted_data, str)
+        else extracted_data
+    )
 
     # Record extraction in context
     extraction = ExtractionResult(
@@ -124,5 +134,9 @@ async def extract_text(
         "extracted_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info("Text extraction complete: instruction=%s, success=%s", instruction, response.success)
+    logger.info(
+        "Text extraction complete: instruction=%s, success=%s",
+        instruction,
+        response.success,
+    )
     return json.dumps(output, indent=2)

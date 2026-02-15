@@ -6,10 +6,8 @@ before the agent pipeline processes it.
 
 import logging
 
-from agents import (Agent, GuardrailFunctionOutput, InputGuardrail,
-                    RunContextWrapper)
-from aiops_incident_response_agent.simulators.scenario_engine import \
-    ScenarioData
+from agents import Agent, GuardrailFunctionOutput, InputGuardrail, RunContextWrapper
+from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
 

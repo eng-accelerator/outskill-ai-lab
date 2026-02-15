@@ -6,10 +6,8 @@ accidentally lock out the SOC team or disrupt critical infrastructure.
 
 import logging
 
-from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
-                    RunContextWrapper)
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
-    ScenarioData
+from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
 

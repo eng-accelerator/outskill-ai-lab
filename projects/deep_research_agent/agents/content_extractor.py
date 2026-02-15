@@ -6,9 +6,11 @@ Hands off extracted content to the Synthesizer.
 """
 
 from agents import Agent, ModelSettings
-from deep_research_agent.tools.content_tools import (jina_read_url,
-                                                     scrape_webpage,
-                                                     youtube_get_transcript)
+from deep_research_agent.tools.content_tools import (
+    jina_read_url,
+    scrape_webpage,
+    youtube_get_transcript,
+)
 
 CONTENT_EXTRACTOR_INSTRUCTIONS = """You are the Content Extractor Agent. You extract content from the most promising URLs, then IMMEDIATELY hand off to the Synthesizer Agent. You NEVER produce a final answer yourself.
 

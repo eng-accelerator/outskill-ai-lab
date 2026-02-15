@@ -5,9 +5,11 @@ web pages, articles, and documentation for the research query.
 """
 
 from agents import Agent, ModelSettings
-from deep_research_agent.tools.web_search_tools import (duckduckgo_news_search,
-                                                        duckduckgo_text_search,
-                                                        tavily_web_search)
+from deep_research_agent.tools.web_search_tools import (
+    duckduckgo_news_search,
+    duckduckgo_text_search,
+    tavily_web_search,
+)
 
 WEB_RESEARCHER_INSTRUCTIONS = """You are the Web Researcher Agent. You search the web using Tavily and DuckDuckGo, then IMMEDIATELY hand off to the Content Extractor Agent. You NEVER produce a final answer yourself.
 

@@ -6,10 +6,8 @@ they are presented as final output.
 
 import logging
 
-from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
-                    RunContextWrapper)
-from aiops_incident_response_agent.simulators.scenario_engine import \
-    ScenarioData
+from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
+from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
 

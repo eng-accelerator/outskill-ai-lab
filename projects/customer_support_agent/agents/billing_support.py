@@ -5,10 +5,12 @@ including double charges, subscription changes, refund requests, and invoice dis
 """
 
 from agents import Agent, ModelSettings
-from customer_support_agent.tools.billing_tools import (check_payment_status,
-                                                        get_billing_info,
-                                                        process_refund,
-                                                        update_subscription)
+from customer_support_agent.tools.billing_tools import (
+    check_payment_status,
+    get_billing_info,
+    process_refund,
+    update_subscription,
+)
 
 BILLING_SUPPORT_INSTRUCTIONS = """You are an expert Billing Support Agent. Your role is to investigate and resolve billing-related customer issues.
 

@@ -6,8 +6,9 @@ performed, data extracted, and overall success status.
 """
 
 from agents import Agent, ModelSettings
-from browser_automation_agent.guardrails.output_validation import \
-    report_quality_guardrail
+from browser_automation_agent.guardrails.output_validation import (
+    report_quality_guardrail,
+)
 
 REPORTER_INSTRUCTIONS = """You are the Reporter Agent. You are the FINAL agent in the browser automation pipeline. Your job is to compile all results into a clear, structured report.
 

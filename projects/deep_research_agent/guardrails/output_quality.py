@@ -7,8 +7,7 @@ and meets minimum quality standards before delivery to the user.
 import logging
 import re
 
-from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
-                    RunContextWrapper)
+from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
 from deep_research_agent.models.research import ResearchContext
 
 logger = logging.getLogger(__name__)

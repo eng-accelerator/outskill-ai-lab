@@ -9,10 +9,10 @@ import logging
 from dataclasses import asdict
 
 from agents import RunContextWrapper, function_tool
-from aiops_incident_response_agent.simulators.metrics_simulator import \
-    SERVICE_DEPENDENCIES
-from aiops_incident_response_agent.simulators.scenario_engine import \
-    ScenarioData
+from aiops_incident_response_agent.simulators.metrics_simulator import (
+    SERVICE_DEPENDENCIES,
+)
+from aiops_incident_response_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
 

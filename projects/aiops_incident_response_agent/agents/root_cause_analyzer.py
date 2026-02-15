@@ -6,7 +6,10 @@ and deployment records, and produces a root cause determination.
 
 from agents import Agent, ModelSettings
 from aiops_incident_response_agent.tools.trace_tools import (
-    correlate_signals, get_recent_deployments, query_traces)
+    correlate_signals,
+    get_recent_deployments,
+    query_traces,
+)
 
 RCA_INSTRUCTIONS = """You are an expert Root Cause Analysis Agent. Your role is to determine the root cause of incidents.
 

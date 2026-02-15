@@ -7,8 +7,7 @@ minimum quality standards before delivery to the user.
 import logging
 import re
 
-from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
-                    RunContextWrapper)
+from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
 from browser_automation_agent.models.task import BrowserContext
 
 logger = logging.getLogger(__name__)
@@ -62,8 +61,7 @@ async def validate_report_quality(
 
     # Check for structured results (at least one pattern)
     has_results = any(
-        re.search(p, output_text, re.MULTILINE | re.DOTALL)
-        for p in _RESULT_PATTERNS
+        re.search(p, output_text, re.MULTILINE | re.DOTALL) for p in _RESULT_PATTERNS
     )
     if not has_results:
         logger.warning("Report quality check FAILED: no structured results found")

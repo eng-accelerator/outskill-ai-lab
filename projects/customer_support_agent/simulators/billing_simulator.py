@@ -7,8 +7,7 @@ payments, and refunds for various customer support scenarios.
 import logging
 from datetime import datetime, timedelta, timezone
 
-from customer_support_agent.models.billing import (Invoice, Payment, Refund,
-                                                   Subscription)
+from customer_support_agent.models.billing import Invoice, Payment, Refund, Subscription
 
 logger = logging.getLogger(__name__)
 

@@ -7,8 +7,7 @@ inappropriate language in agent responses.
 import logging
 import re
 
-from agents import (Agent, GuardrailFunctionOutput, OutputGuardrail,
-                    RunContextWrapper)
+from agents import Agent, GuardrailFunctionOutput, OutputGuardrail, RunContextWrapper
 from customer_support_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)

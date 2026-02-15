@@ -6,7 +6,10 @@ resolve, creating escalation tickets and routing to appropriate human teams.
 
 from agents import Agent, ModelSettings
 from customer_support_agent.tools.escalation_tools import (
-    create_escalation_ticket, escalate_to_human, get_agent_availability)
+    create_escalation_ticket,
+    escalate_to_human,
+    get_agent_availability,
+)
 
 ESCALATION_INSTRUCTIONS = """You are an expert Escalation Agent. Your role is to handle complex or unresolved cases that need human intervention.
 

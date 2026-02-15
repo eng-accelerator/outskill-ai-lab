@@ -6,8 +6,7 @@ the appropriate specialist researcher agents.
 """
 
 from agents import Agent, ModelSettings
-from deep_research_agent.guardrails.input_validation import \
-    research_input_guardrail
+from deep_research_agent.guardrails.input_validation import research_input_guardrail
 from deep_research_agent.tools.web_search_tools import tavily_web_search
 
 RESEARCH_PLANNER_INSTRUCTIONS = """You are the Research Planner Agent. You MUST plan the research and then IMMEDIATELY hand off to a researcher agent using one of the transfer tools. You NEVER produce a final answer yourself.

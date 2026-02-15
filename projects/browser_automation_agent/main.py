@@ -12,14 +12,19 @@ Usage:
 import asyncio
 import logging
 
-from agents import (AgentHooks, AsyncOpenAI, OpenAIChatCompletionsModel,
-                    RunConfig, Runner, set_tracing_disabled)
+from agents import (
+    AgentHooks,
+    AsyncOpenAI,
+    OpenAIChatCompletionsModel,
+    RunConfig,
+    Runner,
+    set_tracing_disabled,
+)
 from browser_automation_agent.agents.extractor import create_extractor_agent
 from browser_automation_agent.agents.interactor import create_interactor_agent
 from browser_automation_agent.agents.navigator import create_navigator_agent
 from browser_automation_agent.agents.reporter import create_reporter_agent
-from browser_automation_agent.agents.task_planner import \
-    create_task_planner_agent
+from browser_automation_agent.agents.task_planner import create_task_planner_agent
 from browser_automation_agent.agents.validator import create_validator_agent
 from browser_automation_agent.models.task import BrowserContext
 from browser_automation_agent.utils.config import load_config
@@ -119,7 +124,9 @@ class BrowserAutomationHooks(AgentHooks):
 # -----------------------------------------------------------------
 
 
-def create_openrouter_model(config: dict[str, str | None]) -> OpenAIChatCompletionsModel:
+def create_openrouter_model(
+    config: dict[str, str | None],
+) -> OpenAIChatCompletionsModel:
     """Create an OpenRouter-backed model using Chat Completions API.
 
     Args:
@@ -152,7 +159,9 @@ def create_openrouter_model(config: dict[str, str | None]) -> OpenAIChatCompleti
         openai_client=client,
     )
 
-    logger.info("OpenRouter model configured: base_url=%s, model=%s", base_url, model_name)
+    logger.info(
+        "OpenRouter model configured: base_url=%s, model=%s", base_url, model_name
+    )
     return model
 
 

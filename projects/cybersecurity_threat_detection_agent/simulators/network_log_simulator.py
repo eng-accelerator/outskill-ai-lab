@@ -7,8 +7,7 @@ C2 beaconing, data exfiltration, and normal traffic.
 import random
 from datetime import datetime, timedelta
 
-from cybersecurity_threat_detection_agent.models.analysis import \
-    NetworkLogEntry
+from cybersecurity_threat_detection_agent.models.analysis import NetworkLogEntry
 
 # Internal network ranges
 INTERNAL_IPS = [

@@ -8,8 +8,7 @@ import json
 import logging
 
 from agents import RunContextWrapper, function_tool
-from cybersecurity_threat_detection_agent.simulators.scenario_engine import \
-    ScenarioData
+from cybersecurity_threat_detection_agent.simulators.scenario_engine import ScenarioData
 
 logger = logging.getLogger(__name__)
 

@@ -7,8 +7,10 @@ request counts) for each microservice, with anomalies injected per scenario.
 import random
 from datetime import datetime, timedelta
 
-from aiops_incident_response_agent.models.analysis import (AnomalyDetection,
-                                                           MetricDataPoint)
+from aiops_incident_response_agent.models.analysis import (
+    AnomalyDetection,
+    MetricDataPoint,
+)
 
 SERVICES = [
     "api-gateway",

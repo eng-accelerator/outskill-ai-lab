@@ -12,23 +12,38 @@ Usage:
 import asyncio
 import logging
 
-from agents import (AgentHooks, AsyncOpenAI, ModelSettings,
-                    OpenAIChatCompletionsModel, RunConfig, Runner,
-                    set_tracing_disabled)
-from cybersecurity_threat_detection_agent.agents.alert_intake import \
-    create_alert_intake_agent
-from cybersecurity_threat_detection_agent.agents.auth_analyzer import \
-    create_auth_analyzer_agent
-from cybersecurity_threat_detection_agent.agents.containment import \
-    create_containment_agent
-from cybersecurity_threat_detection_agent.agents.network_analyzer import \
-    create_network_analyzer_agent
-from cybersecurity_threat_detection_agent.agents.soc_reporter import \
-    create_soc_reporter_agent
-from cybersecurity_threat_detection_agent.agents.threat_intel import \
-    create_threat_intel_agent
+from agents import (
+    AgentHooks,
+    AsyncOpenAI,
+    ModelSettings,
+    OpenAIChatCompletionsModel,
+    RunConfig,
+    Runner,
+    set_tracing_disabled,
+)
+from cybersecurity_threat_detection_agent.agents.alert_intake import (
+    create_alert_intake_agent,
+)
+from cybersecurity_threat_detection_agent.agents.auth_analyzer import (
+    create_auth_analyzer_agent,
+)
+from cybersecurity_threat_detection_agent.agents.containment import (
+    create_containment_agent,
+)
+from cybersecurity_threat_detection_agent.agents.network_analyzer import (
+    create_network_analyzer_agent,
+)
+from cybersecurity_threat_detection_agent.agents.soc_reporter import (
+    create_soc_reporter_agent,
+)
+from cybersecurity_threat_detection_agent.agents.threat_intel import (
+    create_threat_intel_agent,
+)
 from cybersecurity_threat_detection_agent.simulators.scenario_engine import (
-    ScenarioType, generate_scenario, list_scenarios)
+    ScenarioType,
+    generate_scenario,
+    list_scenarios,
+)
 from cybersecurity_threat_detection_agent.utils.config import load_config
 
 logging.basicConfig(
