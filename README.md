@@ -34,6 +34,7 @@ Each project is self-contained with its own agents, tools, models, guardrails, s
 | 2 | [**Cybersecurity Threat Detection**](projects/cybersecurity_threat_detection_agent/) | 6 | 12 | Autonomous SOC analyst — SIEM event correlation, MITRE ATT&CK mapping, containment actions |
 | 3 | [**Customer Support**](projects/customer_support_agent/) | 6 | 18 | Autonomous support rep — intent classification, order/billing/technical support, CSAT prediction |
 | 4 | [**Deep Research**](projects/deep_research_agent/) | 7 | 24 | Autonomous researcher — multi-source web search, source evaluation, cited reports (real APIs) |
+| 5 | [**Browser Automation**](projects/browser_automation_agent/) | 6 | 5 | Autonomous browser controller — web scraping, form automation, structured data extraction (Stagehand) |
 
 ### Project Details
 
@@ -97,6 +98,21 @@ An autonomous research system that searches the live web, retrieves academic pap
 
 </details>
 
+<details>
+<summary><b>5. Browser Automation Agent</b></summary>
+<br />
+
+An autonomous browser controller that navigates web pages, interacts with elements, and extracts structured data using Stagehand (local Chrome) for browser control and OpenAI Agents SDK for LLM orchestration.
+
+- **Pipeline**: Task Planner → Navigator → Interactor → Extractor → Validator → Reporter
+- **Browser Backend**: Stagehand Python SDK with local headless Chrome (no cloud browser service needed)
+- **Guardrails**: Input validation (task + API keys) + output quality (report structure, data presence)
+- **Scenarios**: Web scraping (Hacker News posts), form automation (Google Search + extract results)
+
+📖 [README](projects/browser_automation_agent/README.md) · [Architecture](projects/browser_automation_agent/ARCHITECTURE.md) · [Code Guide](projects/browser_automation_agent/CODE.md)
+
+</details>
+
 ---
 
 ## Tech Stack
@@ -112,6 +128,7 @@ An autonomous research system that searches the live web, retrieves academic pap
 | **Academic Search** | arXiv, Semantic Scholar, Wikipedia |
 | **Content Extraction** | Jina Reader, BeautifulSoup, YouTube Transcript API |
 | **News & Community** | Google News RSS, Reddit, GitHub, StackExchange |
+| **Browser Automation** | Stagehand Python SDK (local Chrome) |
 
 ---
 
@@ -152,6 +169,9 @@ OPENROUTER_API_KEY=your_openrouter_key_here
 
 # Required for Deep Research Agent — Tavily web search
 TAVILY_API_KEY=your_tavily_key_here
+
+# Required for Browser Automation Agent — Stagehand's internal LLM
+MODEL_API_KEY=your_model_api_key_here
 ```
 
 **Where to get API keys:**
@@ -160,6 +180,7 @@ TAVILY_API_KEY=your_tavily_key_here
 |-----|----------|-----------|
 | `OPENROUTER_API_KEY` | [openrouter.ai](https://openrouter.ai/) | Free credits on signup |
 | `TAVILY_API_KEY` | [tavily.com](https://tavily.com/) | 1,000 searches/month |
+| `MODEL_API_KEY` | [openrouter.ai](https://openrouter.ai/) (or OpenAI) | For Stagehand's browser AI |
 
 > **Note**: All other external APIs used by the Deep Research Agent (DuckDuckGo, Wikipedia, arXiv, Semantic Scholar, Jina Reader, YouTube, Google News, Reddit, GitHub, StackExchange) require **no API key**.
 
@@ -179,6 +200,9 @@ PYTHONPATH=projects uv run python -m customer_support_agent.main
 
 # Deep Research Agent
 PYTHONPATH=projects uv run python -m deep_research_agent.main
+
+# Browser Automation Agent
+PYTHONPATH=projects uv run python -m browser_automation_agent.main
 ```
 
 Or run programmatically:
@@ -243,10 +267,21 @@ outskill-ai-lab/
     │   ├── ARCHITECTURE.md
     │   └── CODE.md
     │
-    └── deep_research_agent/
+    ├── deep_research_agent/
+    │   ├── main.py               # Pipeline entry point
+    │   ├── agents/               # 7 agents (planner → report writer)
+    │   ├── tools/                # 24 function tools (real external APIs)
+    │   ├── models/               # Dataclass models
+    │   ├── guardrails/           # Input + output quality guardrails
+    │   ├── utils/                # Config loader
+    │   ├── README.md
+    │   ├── ARCHITECTURE.md
+    │   └── CODE.md
+    │
+    └── browser_automation_agent/
         ├── main.py               # Pipeline entry point
-        ├── agents/               # 7 agents (planner → report writer)
-        ├── tools/                # 24 function tools (real external APIs)
+        ├── agents/               # 6 agents (planner → reporter)
+        ├── tools/                # 5 function tools (Stagehand wrappers)
         ├── models/               # Dataclass models
         ├── guardrails/           # Input + output quality guardrails
         ├── utils/                # Config loader
@@ -266,8 +301,8 @@ Every project in this lab follows a consistent set of agentic design patterns, d
 | **Default Agent Loop** | Goal → Context → Plan → Act → Reflect | All agents |
 | **Prompt Chaining** | Sequential handoff chain where each agent's output feeds the next | All pipelines |
 | **Routing** | Entry agent classifies input and routes to specialist | All entry agents |
-| **Tool Use** | Typed function tools with JSON schemas, strict I/O | 66 tools total |
-| **Multi-Agent** | Single-responsibility agents communicating via handoffs | 25 agents total |
+| **Tool Use** | Typed function tools with JSON schemas, strict I/O | 71 tools total |
+| **Multi-Agent** | Single-responsibility agents communicating via handoffs | 31 agents total |
 | **Guardrails & Safety** | Input validation + output safety on entry/terminal agents | All projects |
 | **Human-in-the-Loop** | Escalation paths for cases beyond automated resolution | Customer Support, Cybersecurity |
 | **Reflection** | Self-evaluation of source quality and cross-referencing | Deep Research |
