@@ -3,13 +3,15 @@
   <p align="center">
     Production-grade AI Agent projects built with the OpenAI Agents SDK
     <br />
-    <em>Multi-agent pipelines · Tool orchestration · Guardrails · Real-world APIs</em>
+    <em>Multi-agent pipelines · Full-stack web apps · Real-time streaming · Guardrails · Real-world APIs</em>
   </p>
   <p align="center">
     <a href="https://github.com/ishandutta0098"><img alt="Author" src="https://img.shields.io/badge/creator-Ishan%20Dutta-blue?style=flat-square" /></a>
     <img alt="Python 3.12+" src="https://img.shields.io/badge/python-3.12%2B-3776AB?style=flat-square&logo=python&logoColor=white" />
     <img alt="uv" src="https://img.shields.io/badge/package%20manager-uv-DE5FE9?style=flat-square" />
     <img alt="OpenAI Agents SDK" src="https://img.shields.io/badge/framework-OpenAI%20Agents%20SDK-412991?style=flat-square&logo=openai&logoColor=white" />
+    <img alt="FastAPI" src="https://img.shields.io/badge/backend-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" />
+    <img alt="React" src="https://img.shields.io/badge/frontend-React%2018-61DAFB?style=flat-square&logo=react&logoColor=black" />
     <img alt="License" src="https://img.shields.io/badge/license-MIT-green?style=flat-square" />
   </p>
 </p>
@@ -20,7 +22,7 @@
 
 **Outskill AI Lab** is a collection of production-grade AI Agent projects, each designed as a complete, end-to-end multi-agent system. Every project follows battle-tested [agentic design patterns](.cursor/rules/agentic_design_patterns.mdc) — prompt chaining, routing, tool use, guardrails, human-in-the-loop escalation, and observability — implemented with the [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) and powered by [OpenRouter](https://openrouter.ai/).
 
-Each project is self-contained with its own agents, tools, models, guardrails, simulators (or real APIs), documentation, and a working `main.py` you can run immediately.
+Each project is self-contained with its own agents, tools, models, guardrails, simulators (or real APIs), documentation, a working `main.py` you can run immediately, and a **full-stack web application** (FastAPI backend + React frontend) with real-time SSE streaming.
 
 > **Contributing** — Want to add a new project or improve an existing one? Open an issue and let's discuss!
 
@@ -115,14 +117,53 @@ An autonomous browser controller that navigates web pages, interacts with elemen
 
 ---
 
+## Web Applications
+
+Every project ships with an independent **FastAPI backend** and **React frontend**, turning each CLI-based agent pipeline into a production-ready web application with real-time streaming.
+
+| # | Project | Backend Port | Frontend Port | Design Inspiration |
+|---|---------|:---:|:---:|---|
+| 1 | Deep Research Agent | 8001 | 5173 | Perplexity AI |
+| 2 | Browser Automation Agent | 8002 | 5174 | Comet / Atlas |
+| 3 | Customer Support Agent | 8003 | 5175 | Zendesk / Forethought |
+| 4 | AI OPs Incident Response Agent | 8004 | 5176 | Datadog Watchdog |
+| 5 | Cybersecurity Threat Detection Agent | 8005 | 5177 | CrowdStrike Falcon / MS Sentinel |
+
+**Key features across all web apps:**
+- **SSE streaming** -- Real-time agent lifecycle events (agent starts, tool calls, handoffs, phase changes) streamed to the browser via Server-Sent Events
+- **Phase indicators** -- Animated pipeline progress showing which agent is currently active
+- **Agent activity timeline** -- Collapsible sidebar displaying every tool call, handoff, and agent transition as it happens
+- **Markdown report rendering** -- Final reports rendered with full markdown support
+- **Dark theme** -- Each project has a unique accent color matching its domain (blue, purple, teal, orange, red)
+
+### Running a Web App
+
+```bash
+# Start the backend (from repo root)
+PYTHONPATH=projects uv run uvicorn deep_research_agent.api.app:app --reload --port 8001
+
+# Start the frontend (from project's frontend/ dir)
+cd projects/deep_research_agent/frontend
+npm install   # first time only
+npm run dev
+```
+
+Then open `http://localhost:5173` in your browser.
+
+---
+
 ## Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
 | **Agent Framework** | [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) (`openai-agents`) |
 | **LLM Provider** | [OpenRouter](https://openrouter.ai/) (access to GPT-4.1, GPT-5, Claude, etc.) |
-| **Language** | Python 3.12+ |
-| **Package Manager** | [uv](https://docs.astral.sh/uv/) |
+| **Backend** | [FastAPI](https://fastapi.tiangolo.com/) + [SSE-Starlette](https://github.com/sysid/sse-starlette) + [Uvicorn](https://www.uvicorn.org/) |
+| **Frontend** | [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) + [Vite](https://vite.dev/) |
+| **Styling** | [TailwindCSS v4](https://tailwindcss.com/) + [Lucide Icons](https://lucide.dev/) |
+| **State Management** | [Zustand](https://zustand.docs.pmnd.rs/) + [TanStack Query](https://tanstack.com/query) |
+| **Language** | Python 3.12+ / TypeScript |
+| **Package Manager** | [uv](https://docs.astral.sh/uv/) (Python) / npm (JS) |
 | **Type System** | Modern Python annotations, dataclasses, Literal types, Protocol classes |
 | **Web Search** | Tavily, DuckDuckGo |
 | **Academic Search** | arXiv, Semantic Scholar, Wikipedia |
@@ -138,6 +179,7 @@ An autonomous browser controller that navigates web pages, interacts with elemen
 
 - **Python 3.12+**
 - **[uv](https://docs.astral.sh/uv/)** — fast Python package manager
+- **Node.js 18+** and **npm** — for the React frontends
 
 ```bash
 # Install uv (if not already installed)
@@ -186,26 +228,44 @@ MODEL_API_KEY=your_model_api_key_here
 
 ### 4. Run a Project
 
-Each project has its own `main.py`. Run from the repository root:
+Each project can be run as a **CLI pipeline** or as a **full-stack web application**.
+
+#### Option A: CLI Mode
 
 ```bash
-# AI Ops Incident Response Agent
-PYTHONPATH=projects uv run python -m aiops_incident_response_agent.main
-
-# Cybersecurity Threat Detection Agent
-PYTHONPATH=projects uv run python -m cybersecurity_threat_detection_agent.main
-
-# Customer Support Agent
-PYTHONPATH=projects uv run python -m customer_support_agent.main
-
 # Deep Research Agent
 PYTHONPATH=projects uv run python -m deep_research_agent.main
 
 # Browser Automation Agent
 PYTHONPATH=projects uv run python -m browser_automation_agent.main
+
+# Customer Support Agent
+PYTHONPATH=projects uv run python -m customer_support_agent.main
+
+# AI Ops Incident Response Agent
+PYTHONPATH=projects uv run python -m aiops_incident_response_agent.main
+
+# Cybersecurity Threat Detection Agent
+PYTHONPATH=projects uv run python -m cybersecurity_threat_detection_agent.main
 ```
 
-Or run programmatically:
+#### Option B: Web Application (Backend + Frontend)
+
+Start the FastAPI backend and React frontend in two separate terminals:
+
+```bash
+# Terminal 1 — Backend (e.g. Deep Research Agent on port 8001)
+PYTHONPATH=projects uv run uvicorn deep_research_agent.api.app:app --reload --port 8001
+
+# Terminal 2 — Frontend
+cd projects/deep_research_agent/frontend
+npm install   # first time only
+npm run dev
+```
+
+Repeat for other projects using their respective ports (see [Web Applications](#web-applications) table above).
+
+#### Programmatic Usage
 
 ```python
 import asyncio
@@ -231,60 +291,29 @@ outskill-ai-lab/
 │   └── agentic_design_patterns.mdc
 │
 └── projects/
-    ├── aiops_incident_response_agent/
-    │   ├── main.py               # Pipeline entry point
-    │   ├── agents/               # 6 agents (triage → reporter)
-    │   ├── tools/                # 12 function tools
-    │   ├── models/               # Dataclass models
-    │   ├── simulators/           # Event simulators + scenario engine
-    │   ├── guardrails/           # Input + output guardrails
-    │   ├── utils/                # Config loader
-    │   ├── README.md
-    │   ├── ARCHITECTURE.md
-    │   └── CODE.md
-    │
-    ├── cybersecurity_threat_detection_agent/
-    │   ├── main.py               # Pipeline entry point
-    │   ├── agents/               # 6 agents (alert intake → SOC reporter)
-    │   ├── tools/                # 12 function tools
-    │   ├── models/               # Dataclass models
-    │   ├── simulators/           # Security event simulators + scenario engine
-    │   ├── guardrails/           # Input + containment safety guardrails
-    │   ├── utils/                # Config loader
-    │   ├── README.md
-    │   ├── ARCHITECTURE.md
-    │   └── CODE.md
-    │
-    ├── customer_support_agent/
-    │   ├── main.py               # Pipeline entry point
-    │   ├── agents/               # 6 agents (intake → resolution)
-    │   ├── tools/                # 18 function tools
-    │   ├── models/               # Dataclass models
-    │   ├── simulators/           # Customer data simulators + scenario engine
-    │   ├── guardrails/           # Input + response safety guardrails
-    │   ├── utils/                # Config loader
-    │   ├── README.md
-    │   ├── ARCHITECTURE.md
-    │   └── CODE.md
-    │
-    ├── deep_research_agent/
-    │   ├── main.py               # Pipeline entry point
-    │   ├── agents/               # 7 agents (planner → report writer)
-    │   ├── tools/                # 24 function tools (real external APIs)
-    │   ├── models/               # Dataclass models
-    │   ├── guardrails/           # Input + output quality guardrails
-    │   ├── utils/                # Config loader
-    │   ├── README.md
-    │   ├── ARCHITECTURE.md
-    │   └── CODE.md
-    │
-    └── browser_automation_agent/
-        ├── main.py               # Pipeline entry point
-        ├── agents/               # 6 agents (planner → reporter)
-        ├── tools/                # 5 function tools (Stagehand wrappers)
-        ├── models/               # Dataclass models
-        ├── guardrails/           # Input + output quality guardrails
+    └── <project_name>/           # Each project follows this structure
+        ├── main.py               # CLI pipeline entry point
+        ├── agents/               # Agent definitions (OpenAI Agents SDK)
+        ├── tools/                # @function_tool implementations
+        ├── models/               # Frozen dataclass domain models
+        ├── simulators/           # Scenario data generators (where applicable)
+        ├── guardrails/           # Input + output guardrails
         ├── utils/                # Config loader
+        ├── api/                  # FastAPI backend
+        │   ├── app.py            #   App entry with CORS + lifespan
+        │   ├── routers/          #   API route handlers
+        │   ├── schemas/          #   Pydantic request/response models
+        │   └── streaming.py      #   SSE hooks + run state manager
+        ├── frontend/             # React frontend (Vite + TypeScript)
+        │   ├── src/
+        │   │   ├── components/   #   UI components
+        │   │   ├── pages/        #   Route-level views
+        │   │   ├── hooks/        #   Custom hooks (useSSE, etc.)
+        │   │   ├── stores/       #   Zustand state stores
+        │   │   └── lib/          #   API client + utilities
+        │   ├── package.json
+        │   ├── vite.config.ts
+        │   └── tsconfig.json
         ├── README.md
         ├── ARCHITECTURE.md
         └── CODE.md
